@@ -3,7 +3,7 @@ ModularNucleoid P2P Demo
 A Flask web application: ModularNucleoid P2P Demo (Fortran + Wasm + PeerJS)
 Author: SMILHS
 Generated: 2025-07-30 11:44:47
-Updated: 2025-07-31 - Added SQLAlchemy integration
+Updated: 2025-07-31 - Added SQLAlchemy integration and Application Factory
 """
 import os
 import logging
@@ -21,43 +21,11 @@ import json
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
 
-# Initialize Flask app
-app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+# IMPORTANT: Import db from models here, but do NOT initialize it with app yet.
+# This db object is the SQLAlchemy instance itself.
+from models import db
 
-# Configuration
-app.config['APPLICATION_NAME'] = 'ModularNucleoid P2P Demo'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{BASE_DIR / "data" / "compounds.db"}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['CACHE_TYPE'] = 'simple'
-
-# Ensure data directory exists
-(BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
-
-# Initialize extensions
-# IMPORTANT: Import db and initialize it with the app BEFORE importing blueprints
-from models import db # Import the db instance from models.py
-db.init_app(app) # Initialize db with the Flask app instance
-
-migrate = Migrate(app, db)
-CORS(app)
-cache = Cache(app)
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"]
-)
-
-# No need to import individual models (Compound, BiochemicalGroup, etc.) here in app.py
-# if they are primarily used within blueprints or CLI commands.
-# They will be imported where needed (e.g., in routes/main.py or within CLI command functions).
-
-# Import blueprints from the routes package. This must happen AFTER db.init_app(app)
-from routes import register_blueprints
-# Import utilities (keep the helpers, but we'll use SQLAlchemy for database)
-from utils.helpers import format_datetime
-
-# Logging setup
+# Logging setup - moved outside create_app for global access
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
@@ -69,23 +37,130 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# CLI Commands
-# Import models within the app_context for CLI commands to ensure db is bound
-@app.cli.command()
-def init_db():
+def create_app():
+    """
+    Application factory function to create and configure the Flask app.
+    This helps avoid circular imports and ensures extensions are initialized correctly.
+    """
+    app = Flask(__name__)
+    app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+
+    # Configuration
+    app.config['APPLICATION_NAME'] = 'ModularNucleoid P2P Demo'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{BASE_DIR / "data" / "compounds.db"}'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['CACHE_TYPE'] = 'simple'
+
+    # Ensure data directory exists
+    (BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
+
+    # Initialize extensions with the app instance
+    db.init_app(app) # Initialize db with the Flask app instance
+    migrate = Migrate(app, db)
+    CORS(app)
+    cache = Cache(app)
+    limiter = Limiter(
+        app=app,
+        key_func=get_remote_address,
+        default_limits=["200 per day", "50 per hour"]
+    )
+
+    # Import blueprints from the routes package. This must happen AFTER db.init_app(app)
+    # to ensure models are properly loaded and db is bound.
+    from routes import register_blueprints
+    register_blueprints(app)
+
+    # Import utilities (keep the helpers, but we'll use SQLAlchemy for database)
+    from utils.helpers import format_datetime
+
+    # Template context processors
+    @app.context_processor
+    def inject_globals():
+        """Inject global variables and functions into all templates"""
+        nav_items_data = [
+            {
+                "name": "Dashboard",
+                "route": "/",
+                "icon": "home"
+            },
+            {
+                "name": "Compounds",
+                "route": "/compounds",
+                "icon": "flask"
+            },
+            {
+                "name": "P2P Demo",
+                "route": "/p2p-demo",
+                "icon": "diagram-2"
+            },
+            {
+                "name": "Settings",
+                "route": "/settings",
+                "icon": "gear"
+            }
+        ]
+        
+        return dict(
+            nav_items=nav_items_data,
+            app_title=app.config['APPLICATION_NAME'],
+            current_year=datetime.now().year,
+            format_datetime=format_datetime
+        )
+
+    # Helper function for backwards compatibility
+    def get_setting(key, default=None):
+        """Get application setting - placeholder for backwards compatibility"""
+        settings = {
+            'app_name': app.config['APPLICATION_NAME'],
+            'version': '1.0.0'
+        }
+        return settings.get(key, default)
+
+    # Add to template context for backwards compatibility
+    app.jinja_env.globals['get_setting'] = get_setting
+
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        logger.warning(f"404 Not Found: {request.path}")
+        return render_template('error.html', error="Page not found", code=404), 404
+
+    @app.errorhandler(500)
+    def server_error(error):
+        logger.exception(f"500 Internal Server Error: {error}")
+        return render_template('error.html', error="Internal server error", code=500), 500
+
+    return app
+
+# --- CLI Commands (defined globally, but operate on an app context) ---
+# We need to create a temporary app instance for CLI commands to attach to.
+# This is a common pattern for Flask CLI with app factories.
+# The actual app instance for running the server will be created in __main__.
+
+# Define CLI commands outside create_app, but use app_context to bind db
+# when they are executed.
+@click.group() # Make 'app' a Click group to attach commands
+def cli():
+    """A collection of CLI commands for the ModularNucleoid P2P Demo."""
+    pass
+
+@cli.command('init-db')
+def init_db_command():
     """Initialize the database."""
     click.echo('Initializing database...')
-    with app.app_context(): # Ensure app context for db operations
-        from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+    app_instance = create_app() # Create an app instance for the CLI command
+    with app_instance.app_context():
+        from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
         db.create_all()
     click.echo('Database initialized!')
 
-@app.cli.command()
-def seed_db():
+@cli.command('seed-db')
+def seed_db_command():
     """Seed the database with initial data."""
     click.echo('Seeding database...')
-    with app.app_context(): # Ensure app context for db operations
-        from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+    app_instance = create_app()
+    with app_instance.app_context():
+        from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
         # Create biochemical groups
         groups_data = [
             {'name': 'Proteins', 'category': 'macromolecules', 'color': '#FF6B6B', 'description': 'Large biomolecules consisting of amino acid chains'},
@@ -227,9 +302,9 @@ def seed_db():
         db.session.commit()
     click.echo('Database seeded successfully!')
 
-@app.cli.command()
+@cli.command('import-compounds')
 @click.option('--file', help='JSON file containing compounds to import')
-def import_compounds(file):
+def import_compounds_command(file):
     """Import compounds from a JSON file."""
     if not file:
         click.echo('Please specify a file with --file option')
@@ -240,8 +315,9 @@ def import_compounds(file):
             compounds_data = json.load(f)
         
         imported_count = 0
-        with app.app_context(): # Ensure app context for db operations
-            from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+        app_instance = create_app()
+        with app_instance.app_context():
+            from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
             for compound_data in compounds_data:
                 # Check if compound already exists
                 existing_compound = Compound.query.filter_by(name=compound_data['name']).first()
@@ -288,11 +364,12 @@ def import_compounds(file):
     except Exception as e:
         click.echo(f'Error importing compounds: {str(e)}')
 
-@app.cli.command()
-def db_stats():
+@cli.command('db-stats')
+def db_stats_command():
     """Show database statistics."""
-    with app.app_context(): # Ensure app context for db operations
-        from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+    app_instance = create_app()
+    with app_instance.app_context():
+        from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
         try:
             # Get counts
             compounds_count = Compound.query.count()
@@ -328,83 +405,24 @@ def db_stats():
         except Exception as e:
             click.echo(f'Error getting database stats: {str(e)}')
 
-@app.cli.command()
-def reset_db():
+@cli.command('reset-db')
+def reset_db_command():
     """Reset the database (drop all tables and recreate)."""
     if click.confirm('Are you sure you want to reset the database? This will delete all data!'):
         click.echo('Resetting database...')
-        with app.app_context(): # Ensure app context for db operations
-            from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+        app_instance = create_app()
+        with app_instance.app_context():
+            from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
             db.drop_all()
             db.create_all()
         click.echo('Database reset complete!')
     else:
         click.echo('Database reset cancelled.')
 
-# Register Blueprints
-register_blueprints(app)
-
-# Error handlers
-@app.errorhandler(404)
-def not_found(error):
-    logger.warning(f"404 Not Found: {request.path}")
-    return render_template('error.html', error="Page not found", code=404), 404
-
-@app.errorhandler(500)
-def server_error(error):
-    logger.exception(f"500 Internal Server Error: {error}")
-    return render_template('error.html', error="Internal server error", code=500), 500
-
-# Template context processors
-@app.context_processor
-def inject_globals():
-    """Inject global variables and functions into all templates"""
-    nav_items_data = [
-        {
-            "name": "Dashboard",
-            "route": "/",
-            "icon": "home"
-        },
-        {
-            "name": "Compounds",
-            "route": "/compounds",
-            "icon": "flask"
-        },
-        {
-            "name": "P2P Demo",
-            "route": "/p2p-demo",
-            "icon": "diagram-2"
-        },
-        {
-            "name": "Settings",
-            "route": "/settings",
-            "icon": "gear"
-        }
-    ]
-    
-    return dict(
-        nav_items=nav_items_data,
-        app_title=app.config['APPLICATION_NAME'],
-        current_year=datetime.now().year,
-        format_datetime=format_datetime
-    )
-
-# Helper function for backwards compatibility
-def get_setting(key, default=None):
-    """Get application setting - placeholder for backwards compatibility"""
-    settings = {
-        'app_name': app.config['APPLICATION_NAME'],
-        'version': '1.0.0'
-    }
-    return settings.get(key, default)
-
-# Add to template context for backwards compatibility
-app.jinja_env.globals['get_setting'] = get_setting
-
+# Entry point for running the Flask app
 if __name__ == '__main__':
-    with app.app_context():
-        # db.create_all() # This is now handled by the init_db CLI command
-        pass # No need to call create_all here if using CLI commands
+    # Create the app instance for the server
+    app = create_app()
     
     debug = os.environ.get('FLASK_ENV') == 'development'
     port = int(os.environ.get('PORT', 5000))
