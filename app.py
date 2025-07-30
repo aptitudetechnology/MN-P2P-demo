@@ -40,9 +40,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 CORS(app)
 cache = Cache(app)
+
+# CORRECTED: Explicitly pass 'app' and 'key_func' as keyword arguments
 limiter = Limiter(
-    app,
-    key_func=get_remote_address,
+    app=app, # Explicitly assign the Flask app instance
+    key_func=get_remote_address, # Explicitly assign the key function
     default_limits=["200 per day", "50 per hour"]
 )
 
