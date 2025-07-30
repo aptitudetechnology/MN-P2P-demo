@@ -10,11 +10,13 @@ import logging
 import click
 from pathlib import Path
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask_migrate import Migrate
 from flask_cors import CORS
-from extensions import db, migrate, cache, limiter
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_caching import Cache
 from datetime import datetime
 import json
-from extensions import db, migrate, cache, limiter
 
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
@@ -32,17 +34,22 @@ app.config['CACHE_TYPE'] = 'simple'
 # Ensure data directory exists
 (BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
 
-# Initialize extensions with app
-db.init_app(app)
-migrate.init_app(app, db)
-cache.init_app(app)
-limiter.init_app(app)
-CORS(app)
+# Initialize extensions
+# Import db from models and initialize it with the app
+from models import db # Import the db instance from models.py
+db.init_app(app) # Initialize db with the Flask app instance
 
-# 3. Import models *after* db and other extensions are initialized globally
-# AND after db.init_app(app) has been called.
-# This prevents circular import issues.
-from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+migrate = Migrate(app, db)
+CORS(app)
+cache = Cache(app)
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
+
+# Import models after db initialization and binding to app
+from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
 
 # Import blueprints from the routes package
 from routes import register_blueprints
@@ -66,156 +73,154 @@ logger = logging.getLogger(__name__)
 def init_db():
     """Initialize the database."""
     click.echo('Initializing database...')
-    # Use db.create_all() for initial table creation if not using migrations
-    # However, with Flask-Migrate, 'flask db upgrade' is preferred.
-    # This command might be redundant if you're using Flask-Migrate fully.
-    db.create_all()
+    with app.app_context(): # Ensure app context for db operations
+        db.create_all()
     click.echo('Database initialized!')
 
 @app.cli.command()
 def seed_db():
     """Seed the database with initial data."""
     click.echo('Seeding database...')
-    
-    # Create biochemical groups
-    groups_data = [
-        {'name': 'Proteins', 'category': 'macromolecules', 'color': '#FF6B6B', 'description': 'Large biomolecules consisting of amino acid chains'},
-        {'name': 'Nucleotides', 'category': 'building_blocks', 'color': '#4ECDC4', 'description': 'Building blocks of DNA and RNA'},
-        {'name': 'Lipids', 'category': 'macromolecules', 'color': '#45B7D1', 'description': 'Fats, oils, and membrane components'},
-        {'name': 'Carbohydrates', 'category': 'energy', 'color': '#96CEB4', 'description': 'Sugars and starches, primary energy sources'},
-        {'name': 'Amino Acids', 'category': 'building_blocks', 'color': '#FFEAA7', 'description': 'Building blocks of proteins'},
-        {'name': 'Vitamins', 'category': 'cofactors', 'color': '#DDA0DD', 'description': 'Essential organic compounds for metabolism'},
-        {'name': 'Minerals', 'category': 'cofactors', 'color': '#98D8C8', 'description': 'Inorganic substances required for biological functions'},
-        {'name': 'Enzymes', 'category': 'catalysts', 'color': '#F7DC6F', 'description': 'Proteins that catalyze biochemical reactions'},
-        {'name': 'Hormones', 'category': 'signaling', 'color': '#BB8FCE', 'description': 'Chemical messengers in biological systems'},
-        {'name': 'Neurotransmitters', 'category': 'signaling', 'color': '#85C1E9', 'description': 'Chemical messengers in the nervous system'},
-        {'name': 'Alkaloids', 'category': 'secondary_metabolites', 'color': '#F8C471', 'description': 'Nitrogen-containing plant compounds'},
-        {'name': 'Organic Acids', 'category': 'metabolites', 'color': '#AED6F1', 'description': 'Carboxylic acids in biological systems'},
-        {'name': 'Beta-lactams', 'category': 'antibiotics', 'color': '#A9DFBF', 'description': 'Ring-structured antibiotic compounds'}
-    ]
-    
-    for group_data in groups_data:
-        group = BiochemicalGroup.query.filter_by(name=group_data['name']).first()
-        if not group:
-            group = BiochemicalGroup(**group_data)
-            db.session.add(group)
-    
-    # Create therapeutic areas
-    therapeutic_areas = [
-        'Oncology', 'Cardiology', 'Neurology', 'Immunology', 
-        'Infectious Diseases', 'Metabolic Disorders', 'Rare Diseases',
-        'Pain Management', 'Endocrinology'
-    ]
-    
-    for area_name in therapeutic_areas:
-        area = TherapeuticArea.query.filter_by(name=area_name).first()
-        if not area:
-            area = TherapeuticArea(name=area_name)
-            db.session.add(area)
-    
-    # Commit the reference data first
-    db.session.commit()
-    
-    # Sample compounds with relationships
-    sample_compounds_data = [
-        {
-            'name': 'Aspirin',
-            'molecular_formula': 'C9H8O4',
-            'molecular_weight': 180.16,
-            'cas_number': '50-78-2',
-            'smiles': 'CC(=O)OC1=CC=CC=C1C(=O)O',
-            'description': 'Common pain reliever and anti-inflammatory drug',
-            'clinical_phase': 'Approved',
-            'mechanism_of_action': 'COX enzyme inhibitor',
-            'therapeutic_areas': ['Cardiology', 'Pain Management'],
-            'biochemical_group': 'Organic Acids'
-        },
-        {
-            'name': 'Caffeine',
-            'molecular_formula': 'C8H10N4O2',
-            'molecular_weight': 194.19,
-            'cas_number': '58-08-2',
-            'smiles': 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C',
-            'description': 'Central nervous system stimulant',
-            'clinical_phase': 'Approved',
-            'mechanism_of_action': 'Adenosine receptor antagonist',
-            'therapeutic_areas': ['Neurology'],
-            'biochemical_group': 'Alkaloids'
-        },
-        {
-            'name': 'Glucose',
-            'molecular_formula': 'C6H12O6',
-            'molecular_weight': 180.16,
-            'cas_number': '50-99-7',
-            'smiles': 'C(C1C(C(C(C(O1)O)O)O)O)O',
-            'description': 'Primary energy source for cells',
-            'clinical_phase': 'Approved',
-            'mechanism_of_action': 'Energy substrate',
-            'therapeutic_areas': ['Metabolic Disorders'],
-            'biochemical_group': 'Carbohydrates'
-        },
-        {
-            'name': 'Insulin',
-            'molecular_formula': 'C257H383N65O77S6',
-            'molecular_weight': 5808.0,
-            'cas_number': '9004-10-8',
-            'smiles': None,  # Too complex for SMILES
-            'description': 'Hormone that regulates blood glucose levels',
-            'clinical_phase': 'Approved',
-            'mechanism_of_action': 'Insulin receptor agonist',
-            'therapeutic_areas': ['Metabolic Disorders', 'Endocrinology'],
-            'biochemical_group': 'Proteins'
-        },
-        {
-            'name': 'Penicillin G',
-            'molecular_formula': 'C16H18N2O4S',
-            'molecular_weight': 334.39,
-            'cas_number': '61-33-6',
-            'smiles': 'CC1(C(N2C(S1)C(C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C',
-            'description': 'Beta-lactam antibiotic',
-            'clinical_phase': 'Approved',
-            'mechanism_of_action': 'Cell wall synthesis inhibitor',
-            'therapeutic_areas': ['Infectious Diseases'],
-            'biochemical_group': 'Beta-lactams'
-        }
-    ]
-    
-    for compound_data in sample_compounds_data:
-        # Check if compound already exists
-        existing_compound = Compound.query.filter_by(name=compound_data['name']).first()
-        if existing_compound:
-            continue
+    with app.app_context(): # Ensure app context for db operations
+        # Create biochemical groups
+        groups_data = [
+            {'name': 'Proteins', 'category': 'macromolecules', 'color': '#FF6B6B', 'description': 'Large biomolecules consisting of amino acid chains'},
+            {'name': 'Nucleotides', 'category': 'building_blocks', 'color': '#4ECDC4', 'description': 'Building blocks of DNA and RNA'},
+            {'name': 'Lipids', 'category': 'macromolecules', 'color': '#45B7D1', 'description': 'Fats, oils, and membrane components'},
+            {'name': 'Carbohydrates', 'category': 'energy', 'color': '#96CEB4', 'description': 'Sugars and starches, primary energy sources'},
+            {'name': 'Amino Acids', 'category': 'building_blocks', 'color': '#FFEAA7', 'description': 'Building blocks of proteins'},
+            {'name': 'Vitamins', 'category': 'cofactors', 'color': '#DDA0DD', 'description': 'Essential organic compounds for metabolism'},
+            {'name': 'Minerals', 'category': 'cofactors', 'color': '#98D8C8', 'description': 'Inorganic substances required for biological functions'},
+            {'name': 'Enzymes', 'category': 'catalysts', 'color': '#F7DC6F', 'description': 'Proteins that catalyze biochemical reactions'},
+            {'name': 'Hormones', 'category': 'signaling', 'color': '#BB8FCE', 'description': 'Chemical messengers in biological systems'},
+            {'name': 'Neurotransmitters', 'category': 'signaling', 'color': '#85C1E9', 'description': 'Chemical messengers in the nervous system'},
+            {'name': 'Alkaloids', 'category': 'secondary_metabolites', 'color': '#F8C471', 'description': 'Nitrogen-containing plant compounds'},
+            {'name': 'Organic Acids', 'category': 'metabolites', 'color': '#AED6F1', 'description': 'Carboxylic acids in biological systems'},
+            {'name': 'Beta-lactams', 'category': 'antibiotics', 'color': '#A9DFBF', 'description': 'Ring-structured antibiotic compounds'}
+        ]
+        
+        for group_data in groups_data:
+            group = BiochemicalGroup.query.filter_by(name=group_data['name']).first()
+            if not group:
+                group = BiochemicalGroup(**group_data)
+                db.session.add(group)
+        
+        # Create therapeutic areas
+        therapeutic_areas = [
+            'Oncology', 'Cardiology', 'Neurology', 'Immunology', 
+            'Infectious Diseases', 'Metabolic Disorders', 'Rare Diseases',
+            'Pain Management', 'Endocrinology'
+        ]
+        
+        for area_name in therapeutic_areas:
+            area = TherapeuticArea.query.filter_by(name=area_name).first()
+            if not area:
+                area = TherapeuticArea(name=area_name)
+                db.session.add(area)
+        
+        # Commit the reference data first
+        db.session.commit()
+        
+        # Sample compounds with relationships
+        sample_compounds_data = [
+            {
+                'name': 'Aspirin',
+                'molecular_formula': 'C9H8O4',
+                'molecular_weight': 180.16,
+                'cas_number': '50-78-2',
+                'smiles': 'CC(=O)OC1=CC=CC=C1C(=O)O',
+                'description': 'Common pain reliever and anti-inflammatory drug',
+                'clinical_phase': 'Approved',
+                'mechanism_of_action': 'COX enzyme inhibitor',
+                'therapeutic_areas': ['Cardiology', 'Pain Management'],
+                'biochemical_group': 'Organic Acids'
+            },
+            {
+                'name': 'Caffeine',
+                'molecular_formula': 'C8H10N4O2',
+                'molecular_weight': 194.19,
+                'cas_number': '58-08-2',
+                'smiles': 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C',
+                'description': 'Central nervous system stimulant',
+                'clinical_phase': 'Approved',
+                'mechanism_of_action': 'Adenosine receptor antagonist',
+                'therapeutic_areas': ['Neurology'],
+                'biochemical_group': 'Alkaloids'
+            },
+            {
+                'name': 'Glucose',
+                'molecular_formula': 'C6H12O6',
+                'molecular_weight': 180.16,
+                'cas_number': '50-99-7',
+                'smiles': 'C(C1C(C(C(C(O1)O)O)O)O)O',
+                'description': 'Primary energy source for cells',
+                'clinical_phase': 'Approved',
+                'mechanism_of_action': 'Energy substrate',
+                'therapeutic_areas': ['Metabolic Disorders'],
+                'biochemical_group': 'Carbohydrates'
+            },
+            {
+                'name': 'Insulin',
+                'molecular_formula': 'C257H383N65O77S6',
+                'molecular_weight': 5808.0,
+                'cas_number': '9004-10-8',
+                'smiles': None,  # Too complex for SMILES
+                'description': 'Hormone that regulates blood glucose levels',
+                'clinical_phase': 'Approved',
+                'mechanism_of_action': 'Insulin receptor agonist',
+                'therapeutic_areas': ['Metabolic Disorders', 'Endocrinology'],
+                'biochemical_group': 'Proteins'
+            },
+            {
+                'name': 'Penicillin G',
+                'molecular_formula': 'C16H18N2O4S',
+                'molecular_weight': 334.39,
+                'cas_number': '61-33-6',
+                'smiles': 'CC1(C(N2C(S1)C(C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C',
+                'description': 'Beta-lactam antibiotic',
+                'clinical_phase': 'Approved',
+                'mechanism_of_action': 'Cell wall synthesis inhibitor',
+                'therapeutic_areas': ['Infectious Diseases'],
+                'biochemical_group': 'Beta-lactams'
+            }
+        ]
+        
+        for compound_data in sample_compounds_data:
+            # Check if compound already exists
+            existing_compound = Compound.query.filter_by(name=compound_data['name']).first()
+            if existing_compound:
+                continue
+                
+            # Create compound
+            compound = Compound(
+                name=compound_data['name'],
+                molecular_formula=compound_data['molecular_formula'],
+                molecular_weight=compound_data['molecular_weight'],
+                cas_number=compound_data['cas_number'],
+                smiles=compound_data['smiles'],
+                description=compound_data['description'],
+                clinical_phase=compound_data['clinical_phase'],
+                mechanism_of_action=compound_data['mechanism_of_action'],
+                created_by='seed'
+            )
             
-        # Create compound
-        compound = Compound(
-            name=compound_data['name'],
-            molecular_formula=compound_data['molecular_formula'],
-            molecular_weight=compound_data['molecular_weight'],
-            cas_number=compound_data['cas_number'],
-            smiles=compound_data['smiles'],
-            description=compound_data['description'],
-            clinical_phase=compound_data['clinical_phase'],
-            mechanism_of_action=compound_data['mechanism_of_action'],
-            created_by='seed'
-        )
+            # Add biochemical group relationship
+            biochemical_group = BiochemicalGroup.query.filter_by(name=compound_data['biochemical_group']).first()
+            if biochemical_group:
+                compound.biochemical_group = biochemical_group
+            
+            # Add therapeutic area relationships
+            for area_name in compound_data['therapeutic_areas']:
+                therapeutic_area = TherapeuticArea.query.filter_by(name=area_name).first()
+                if therapeutic_area:
+                    compound.therapeutic_areas.append(therapeutic_area)
+            
+            # Calculate sync hash
+            compound.update_sync_hash()
+            
+            db.session.add(compound)
         
-        # Add biochemical group relationship
-        biochemical_group = BiochemicalGroup.query.filter_by(name=compound_data['biochemical_group']).first()
-        if biochemical_group:
-            compound.biochemical_group = biochemical_group
-        
-        # Add therapeutic area relationships
-        for area_name in compound_data['therapeutic_areas']:
-            therapeutic_area = TherapeuticArea.query.filter_by(name=area_name).first()
-            if therapeutic_area:
-                compound.therapeutic_areas.append(therapeutic_area)
-        
-        # Calculate sync hash
-        compound.update_sync_hash()
-        
-        db.session.add(compound)
-    
-    db.session.commit()
+        db.session.commit()
     click.echo('Database seeded successfully!')
 
 @app.cli.command()
@@ -231,43 +236,44 @@ def import_compounds(file):
             compounds_data = json.load(f)
         
         imported_count = 0
-        for compound_data in compounds_data:
-            # Check if compound already exists
-            existing_compound = Compound.query.filter_by(name=compound_data['name']).first()
-            if existing_compound:
-                continue
+        with app.app_context(): # Ensure app context for db operations
+            for compound_data in compounds_data:
+                # Check if compound already exists
+                existing_compound = Compound.query.filter_by(name=compound_data['name']).first()
+                if existing_compound:
+                    continue
+                    
+                # Create compound
+                compound = Compound(
+                    name=compound_data.get('name'),
+                    molecular_formula=compound_data.get('molecular_formula'),
+                    molecular_weight=compound_data.get('molecular_weight'),
+                    cas_number=compound_data.get('cas_number'),
+                    smiles=compound_data.get('smiles'),
+                    description=compound_data.get('description'),
+                    clinical_phase=compound_data.get('clinical_phase'),
+                    mechanism_of_action=compound_data.get('mechanism_of_action'),
+                    created_by='import'
+                )
                 
-            # Create compound
-            compound = Compound(
-                name=compound_data.get('name'),
-                molecular_formula=compound_data.get('molecular_formula'),
-                molecular_weight=compound_data.get('molecular_weight'),
-                cas_number=compound_data.get('cas_number'),
-                smiles=compound_data.get('smiles'),
-                description=compound_data.get('description'),
-                clinical_phase=compound_data.get('clinical_phase'),
-                mechanism_of_action=compound_data.get('mechanism_of_action'),
-                created_by='import'
-            )
+                # Add biochemical group relationship
+                if 'biochemical_group' in compound_data:
+                    biochemical_group = BiochemicalGroup.query.filter_by(name=compound_data['biochemical_group']).first()
+                    if biochemical_group:
+                        compound.biochemical_group = biochemical_group
+                
+                # Add therapeutic area relationships
+                if 'therapeutic_areas' in compound_data:
+                    for area_name in compound_data['therapeutic_areas']:
+                        therapeutic_area = TherapeuticArea.query.filter_by(name=area_name).first()
+                        if therapeutic_area:
+                            compound.therapeutic_areas.append(therapeutic_area)
+                
+                compound.update_sync_hash()
+                db.session.add(compound)
+                imported_count += 1
             
-            # Add biochemical group relationship
-            if 'biochemical_group' in compound_data:
-                biochemical_group = BiochemicalGroup.query.filter_by(name=compound_data['biochemical_group']).first()
-                if biochemical_group:
-                    compound.biochemical_group = biochemical_group
-            
-            # Add therapeutic area relationships
-            if 'therapeutic_areas' in compound_data:
-                for area_name in compound_data['therapeutic_areas']:
-                    therapeutic_area = TherapeuticArea.query.filter_by(name=area_name).first()
-                    if therapeutic_area:
-                        compound.therapeutic_areas.append(therapeutic_area)
-            
-            compound.update_sync_hash()
-            db.session.add(compound)
-            imported_count += 1
-        
-        db.session.commit()
+            db.session.commit()
         click.echo(f'Successfully imported {imported_count} compounds from {file}!')
         
     except FileNotFoundError:
@@ -280,48 +286,50 @@ def import_compounds(file):
 @app.cli.command()
 def db_stats():
     """Show database statistics."""
-    try:
-        # Get counts
-        compounds_count = Compound.query.count()
-        groups_count = BiochemicalGroup.query.count()
-        therapeutic_areas_count = TherapeuticArea.query.count()
-        
-        # Get compounds by clinical phase
-        from sqlalchemy import func
-        phase_stats = db.session.query(
-            Compound.clinical_phase, 
-            func.count(Compound.id)
-        ).group_by(Compound.clinical_phase).all()
-        
-        # Get compounds by biochemical group
-        group_stats = db.session.query(
-            BiochemicalGroup.name, 
-            func.count(Compound.id)
-        ).join(Compound, BiochemicalGroup.id == Compound.biochemical_group_id, isouter=True).group_by(BiochemicalGroup.name).all()
-        
-        click.echo('\n=== Database Statistics ===')
-        click.echo(f'Total Compounds: {compounds_count}')
-        click.echo(f'Biochemical Groups: {groups_count}')
-        click.echo(f'Therapeutic Areas: {therapeutic_areas_count}')
-        
-        click.echo('\nCompounds by Clinical Phase:')
-        for phase, count in phase_stats:
-            click.echo(f'  {phase or "Unknown"}: {count}')
-        
-        click.echo('\nCompounds by Biochemical Group:')
-        for group, count in group_stats:
-            click.echo(f'  {group}: {count}')
-        
-    except Exception as e:
-        click.echo(f'Error getting database stats: {str(e)}')
+    with app.app_context(): # Ensure app context for db operations
+        try:
+            # Get counts
+            compounds_count = Compound.query.count()
+            groups_count = BiochemicalGroup.query.count()
+            therapeutic_areas_count = TherapeuticArea.query.count()
+            
+            # Get compounds by clinical phase
+            from sqlalchemy import func
+            phase_stats = db.session.query(
+                Compound.clinical_phase, 
+                func.count(Compound.id)
+            ).group_by(Compound.clinical_phase).all()
+            
+            # Get compounds by biochemical group
+            group_stats = db.session.query(
+                BiochemicalGroup.name, 
+                func.count(Compound.id)
+            ).join(Compound, BiochemicalGroup.id == Compound.biochemical_group_id, isouter=True).group_by(BiochemicalGroup.name).all()
+            
+            click.echo('\n=== Database Statistics ===')
+            click.echo(f'Total Compounds: {compounds_count}')
+            click.echo(f'Biochemical Groups: {groups_count}')
+            click.echo(f'Therapeutic Areas: {therapeutic_areas_count}')
+            
+            click.echo('\nCompounds by Clinical Phase:')
+            for phase, count in phase_stats:
+                click.echo(f'  {phase or "Unknown"}: {count}')
+            
+            click.echo('\nCompounds by Biochemical Group:')
+            for group, count in group_stats:
+                click.echo(f'  {group}: {count}')
+            
+        except Exception as e:
+            click.echo(f'Error getting database stats: {str(e)}')
 
 @app.cli.command()
 def reset_db():
     """Reset the database (drop all tables and recreate)."""
     if click.confirm('Are you sure you want to reset the database? This will delete all data!'):
         click.echo('Resetting database...')
-        db.drop_all()
-        db.create_all()
+        with app.app_context(): # Ensure app context for db operations
+            db.drop_all()
+            db.create_all()
         click.echo('Database reset complete!')
     else:
         click.echo('Database reset cancelled.')
@@ -388,7 +396,8 @@ app.jinja_env.globals['get_setting'] = get_setting
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        # db.create_all() # This is now handled by the init_db CLI command
+        pass # No need to call create_all here if using CLI commands
     
     debug = os.environ.get('FLASK_ENV') == 'development'
     port = int(os.environ.get('PORT', 5000))
