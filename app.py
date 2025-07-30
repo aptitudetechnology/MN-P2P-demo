@@ -44,8 +44,8 @@ app.config['CACHE_TYPE'] = 'simple'
 db.init_app(app)
 migrate.init_app(app, db)
 cache.init_app(app)
-limiter.init_app(app, key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
-
+#limiter.init_app(app, key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
+limiter.init_app(app)
 
 
 # 2. Initialize extensions by binding them to the app instance

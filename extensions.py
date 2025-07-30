@@ -9,7 +9,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
 
-# key_func is required at init time in Flask-Limiter >=3.x
+# ✅ key_func and default_limits must go here
 limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["200 per day", "50 per hour"]
