@@ -19,6 +19,12 @@ from flask_caching import Cache
 from datetime import datetime
 import json
 
+# Import models
+from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+
+
+
+
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
 
