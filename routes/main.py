@@ -1,9 +1,7 @@
 from flask import Blueprint, render_template, current_app, request, jsonify
-# We no longer import 'db' directly from 'app' at the top level here
-# from app import db # REMOVE THIS LINE TO BREAK CIRCULAR IMPORT
-
-# Import models directly. They already get 'db' from extensions via models/models.py
+# Import models directly. They already get 'db' from 'app' via 'from app import db' in models.py
 from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+
 
 main_bp = Blueprint('main', __name__)
 
@@ -16,7 +14,7 @@ def dashboard():
     # Access the db instance from the current application context
     db = current_app.extensions['sqlalchemy']
     try:
-        total_compounds = db.session.query(Compound).count()
+        total_compounds = db.session.query(Compound).count() # Use db.session.query
         # Example: get recent compounds for a dashboard overview
         recent_compounds = db.session.query(Compound).order_by(Compound.created_at.desc()).limit(5).all()
         return render_template('dashboard.html', title='Dashboard',
@@ -37,8 +35,11 @@ def compounds():
     # Access the db instance from the current application context
     db = current_app.extensions['sqlalchemy']
     try:
-        all_compounds = db.session.query(Compound).all()
-        return render_template('compounds.html', title='Compounds', compounds=all_compounds)
+        all_compounds = db.session.query(Compound).all() # Use db.session.query
+        total_compounds = db.session.query(Compound).count() # <--- NEW: Get total count
+        return render_template('compounds.html', title='Compounds',
+                               compounds=all_compounds,
+                               total_compounds=total_compounds) # <--- NEW: Pass total_compounds
     except Exception as e:
         current_app.logger.error(f"Error loading compounds data: {e}")
         return render_template('compounds.html', title='Compounds',
@@ -60,4 +61,3 @@ def settings():
 #     db = current_app.extensions['sqlalchemy']
 #     compound = db.session.query(Compound).get_or_404(compound_id)
 #     return render_template('compound_detail.html', title=compound.name, compound=compound)
-
