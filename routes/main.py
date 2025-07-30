@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, current_app, request, jsonify
-# Import models and db here if your views need to interact with the database
+# We no longer import 'db' directly from 'app' at the top level here
+# from app import db # REMOVE THIS LINE TO BREAK CIRCULAR IMPORT
+
+# Import models directly. They already get 'db' from extensions via models/models.py
 from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
-from app import db # Assuming 'db' is globally accessible from app.py as per previous fixes
 
 main_bp = Blueprint('main', __name__)
 
@@ -11,10 +13,12 @@ def dashboard():
     Renders the main dashboard page.
     Fetches some summary data for display.
     """
+    # Access the db instance from the current application context
+    db = current_app.extensions['sqlalchemy']
     try:
-        total_compounds = Compound.query.count()
+        total_compounds = db.session.query(Compound).count()
         # Example: get recent compounds for a dashboard overview
-        recent_compounds = Compound.query.order_by(Compound.created_at.desc()).limit(5).all()
+        recent_compounds = db.session.query(Compound).order_by(Compound.created_at.desc()).limit(5).all()
         return render_template('dashboard.html', title='Dashboard',
                                total_compounds=total_compounds,
                                recent_compounds=recent_compounds)
@@ -30,8 +34,10 @@ def compounds():
     Renders the compounds listing page.
     Fetches all compounds to display in a list.
     """
+    # Access the db instance from the current application context
+    db = current_app.extensions['sqlalchemy']
     try:
-        all_compounds = Compound.query.all()
+        all_compounds = db.session.query(Compound).all()
         return render_template('compounds.html', title='Compounds', compounds=all_compounds)
     except Exception as e:
         current_app.logger.error(f"Error loading compounds data: {e}")
@@ -51,6 +57,7 @@ def settings():
 # You can add more routes here for specific compound details, etc.
 # @main_bp.route('/compound/<int:compound_id>')
 # def compound_detail(compound_id):
-#     compound = Compound.query.get_or_404(compound_id)
+#     db = current_app.extensions['sqlalchemy']
+#     compound = db.session.query(Compound).get_or_404(compound_id)
 #     return render_template('compound_detail.html', title=compound.name, compound=compound)
 
