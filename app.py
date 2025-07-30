@@ -10,12 +10,8 @@ import logging
 import click
 from pathlib import Path
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_cors import CORS
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from flask_caching import Cache
+from extensions import db, migrate, cache, limiter
 from datetime import datetime
 import json
 from extensions import db, migrate, cache, limiter
@@ -36,28 +32,12 @@ app.config['CACHE_TYPE'] = 'simple'
 # Ensure data directory exists
 (BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
 
-## 1. Initialize db and migrate instances globally, without binding to app yet.
-# This makes 'db' available for models to import without circular dependency.
-#db = SQLAlchemy()
-#migrate = Migrate()
-
+# Initialize extensions with app
 db.init_app(app)
 migrate.init_app(app, db)
 cache.init_app(app)
-#limiter.init_app(app, key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
 limiter.init_app(app)
-
-
-# 2. Initialize extensions by binding them to the app instance
-db.init_app(app) # <--- db is now bound to app here
-migrate.init_app(app, db)
 CORS(app)
-cache = Cache(app)
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"]
-)
 
 # 3. Import models *after* db and other extensions are initialized globally
 # AND after db.init_app(app) has been called.
