@@ -1,8 +1,7 @@
 import logging
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-# Assuming models and db are in a higher directory or accessible via relative import
-# Adjust this import based on your actual project structure
-from ..models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study, db
+# Corrected: Changed to absolute import for models
+from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study, db
 from sqlalchemy import func
 
 main_bp = Blueprint('main', __name__)
