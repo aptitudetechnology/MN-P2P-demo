@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, current_app, request, jsonify
-# Corrected: Import models from models.models
+from sqlalchemy import func # Import func for aggregation functions
+
+# Import models directly. They already get 'db' from 'app' via 'from app import db' in models.py
 from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
-# Removed: from app import db - Access db via current_app.extensions['sqlalchemy'] instead
 
 
 main_bp = Blueprint('main', __name__)
@@ -15,7 +16,7 @@ def dashboard():
     # Access the db instance from the current application context
     db = current_app.extensions['sqlalchemy']
     try:
-        total_compounds = db.session.query(Compound).count()
+        total_compounds = db.session.query(Compound).count() # Use db.session.query
         # Example: get recent compounds for a dashboard overview
         recent_compounds = db.session.query(Compound).order_by(Compound.created_at.desc()).limit(5).all()
         return render_template('dashboard.html', title='Dashboard',
@@ -31,16 +32,33 @@ def dashboard():
 def compounds():
     """
     Renders the compounds listing page.
-    Fetches all compounds to display in a list.
+    Fetches all compounds and relevant statistics to display.
     """
     # Access the db instance from the current application context
     db = current_app.extensions['sqlalchemy']
     try:
         all_compounds = db.session.query(Compound).all()
+        
+        # Calculate statistics needed by the template
         total_compounds = db.session.query(Compound).count()
+        
+        # Get counts for biochemical groups
+        biochemical_groups_count = db.session.query(BiochemicalGroup).count()
+        
+        # Get counts for therapeutic areas
+        therapeutic_areas_count = db.session.query(TherapeuticArea).count()
+
+        # Create a stats dictionary to pass to the template
+        stats = {
+            'total_compounds': total_compounds,
+            'biochemical_groups': biochemical_groups_count,
+            'therapeutic_areas': therapeutic_areas_count,
+            # Add other stats here if your template expects them
+        }
+
         return render_template('compounds.html', title='Compounds',
                                compounds=all_compounds,
-                               total_compounds=total_compounds)
+                               stats=stats) # <--- Pass the 'stats' dictionary
     except Exception as e:
         current_app.logger.error(f"Error loading compounds data: {e}")
         return render_template('compounds.html', title='Compounds',
