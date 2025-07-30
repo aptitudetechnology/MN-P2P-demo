@@ -1,22 +1,29 @@
 # Core Flask framework
 Flask==2.3.3
-Werkzeug
+Werkzeug==2.3.8 # Compatible with Flask 2.3.3
+
+# Flask Extensions
+Flask-SQLAlchemy==3.1.1 # Compatible with Flask 2.3.3
+Flask-Migrate==4.0.5 # Compatible with Flask 2.3.3 and SQLAlchemy 2.0+
+Flask-Cors==4.0.0 # Compatible with Flask 2.3.3
+Flask-Limiter==3.5.0 # Compatible with Flask 2.3.3
+Flask-Caching==2.1.0 # Compatible with Flask 2.3.3
 
 # Task queue and server
-celery
-gunicorn
-redis
+celery==5.3.6
+gunicorn==22.0.0
+redis==5.0.1
 
 # Environment config
-python-dotenv
+python-dotenv==1.0.0
 
 # WebSocket support (for custom signaling server or real-time sync)
-flask-socketio
-eventlet
+flask-socketio==5.3.0 # Compatible with Flask 2.3.3
+eventlet==0.33.3
 
 # Optional: Fortran-compatible scientific computing in Python
-numpy
-scipy
+numpy==1.26.4
+scipy==1.11.4
 
 # Optional: If automating Fortran→WASM builds via subprocess
-subprocess-runner  # Or use subprocess from Python stdlib
+subprocess-runner==0.0.8 # Or use subprocess from Python stdlib

@@ -4,7 +4,32 @@
   <div class="col-12">
     <h1>Molecular Compounds Database</h1>
     <p class="lead">Scientific compound analysis and therapeutic target research</p>
-    <p class="text-muted">Explore molecular structures, pathways, and therapeutic applications</p>
+    <p class="text-muted">Explore molecular structures, pathways, and therapeutic applications organized by biochemical function</p>
+  </div>
+</div>
+
+<!-- Biochemical Periodic Table Navigation -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-grid-3x3-gap"></i> Biochemical Periodic Table Categories</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for group in biochemical_groups %}
+          <div class="col-md-2">
+            <div class="card border-{{ group.color }} mb-2" style="cursor: pointer;" onclick="filterByGroup('{{ group.code }}')">
+              <div class="card-body text-center p-2 bg-{{ group.color }} text-white">
+                <strong>{{ group.symbol }}</strong><br>
+                <small>{{ group.name }}</small>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -13,352 +38,272 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="input-group">
-              <input type="text" id="compound-search" class="form-control" placeholder="Search compounds (e.g., Imidazole propionate)">
-              <button class="btn btn-primary" onclick="searchCompounds()">
-                <i class="bi bi-search"></i> Search
-              </button>
+        <form method="GET" action="{{ url_for('main.compounds') }}">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <input type="text" name="search" id="compound-search" class="form-control" 
+                       placeholder="Search compounds..." value="{{ request.args.get('search', '') }}">
+                <button class="btn btn-primary" type="submit">
+                  <i class="bi bi-search"></i> Search
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" name="group" id="biochemical-group-filter" onchange="this.form.submit()">
+                <option value="">All Biochemical Groups</option>
+                {% for group in biochemical_groups %}
+                <option value="{{ group.code }}" {% if request.args.get('group') == group.code %}selected{% endif %}>
+                  {{ group.name }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" name="disease" id="disease-filter" onchange="this.form.submit()">
+                <option value="">All Conditions</option>
+                {% for disease in diseases %}
+                <option value="{{ disease.code }}" {% if request.args.get('disease') == disease.code %}selected{% endif %}>
+                  {{ disease.name }}
+                </option>
+                {% endfor %}
+              </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <select class="form-select" id="category-filter">
-              <option value="">All Categories</option>
-              <option value="metabolite">Metabolites</option>
-              <option value="therapeutic">Therapeutic Targets</option>
-              <option value="biomarker">Biomarkers</option>
-              <option value="pathway">Pathway Modulators</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <select class="form-select" id="disease-filter">
-              <option value="">All Diseases</option>
-              <option value="atherosclerosis">Atherosclerosis</option>
-              <option value="cardiovascular">Cardiovascular</option>
-              <option value="metabolic">Metabolic Disorders</option>
-              <option value="inflammatory">Inflammatory</option>
-            </select>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Featured Compound: Imidazole Propionate -->
+<!-- Compound Results -->
+{% if compounds %}
 <div class="row mt-4">
   <div class="col-12">
-    <div class="card border-primary">
-      <div class="card-header bg-primary text-white">
-        <h4 class="mb-0"><i class="bi bi-star-fill"></i> Featured Compound: Imidazole Propionate</h4>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5>Found {{ compounds|length }} compound(s)</h5>
+      <div class="btn-group" role="group">
+        <input type="radio" class="btn-check" name="view-mode" id="card-view" checked>
+        <label class="btn btn-outline-primary" for="card-view">
+          <i class="bi bi-grid"></i> Cards
+        </label>
+        <input type="radio" class="btn-check" name="view-mode" id="table-view">
+        <label class="btn btn-outline-primary" for="table-view">
+          <i class="bi bi-table"></i> Table
+        </label>
       </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card bg-light">
-              <div class="card-body text-center">
-                <h6 class="card-title">Molecular Structure</h6>
-                <!-- Placeholder for molecular structure -->
-                <div class="bg-white p-3 rounded border" style="min-height: 200px;">
-                  <svg width="100%" height="180" viewBox="0 0 200 180">
-                    <!-- Simplified imidazole ring structure -->
-                    <polygon points="50,80 80,60 110,80 100,110 60,110" 
-                             fill="none" stroke="#007bff" stroke-width="2"/>
-                    <!-- Propionate chain -->
-                    <line x1="110" y1="80" x2="140" y2="80" stroke="#007bff" stroke-width="2"/>
-                    <line x1="140" y1="80" x2="160" y2="100" stroke="#007bff" stroke-width="2"/>
-                    <line x1="160" y1="100" x2="180" y2="80" stroke="#007bff" stroke-width="2"/>
-                    <!-- Labels -->
-                    <text x="75" y="50" text-anchor="middle" class="small">Imidazole</text>
-                    <text x="150" y="70" text-anchor="middle" class="small">Propionate</text>
-                    <!-- Atoms -->
-                    <circle cx="50" cy="80" r="3" fill="#ff6b6b"/>
-                    <circle cx="80" cy="60" r="3" fill="#4ecdc4"/>
-                    <circle cx="110" cy="80" r="3" fill="#ff6b6b"/>
-                    <circle cx="180" cy="80" r="3" fill="#feca57"/>
-                  </svg>
-                </div>
-                <small class="text-muted">C₆H₈N₂O₂</small>
-              </div>
-            </div>
+    </div>
+
+    <!-- Card View -->
+    <div id="compounds-cards" class="row">
+      {% for compound in compounds %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 border-{{ compound.biochemical_group.color }}">
+          <div class="card-header bg-{{ compound.biochemical_group.color }} text-white">
+            <h6 class="mb-0">
+              <i class="bi bi-{{ compound.icon }}"></i> {{ compound.name }}
+              <span class="badge bg-light text-dark ms-2">{{ compound.biochemical_group.symbol }}</span>
+            </h6>
+            <small>{{ compound.biochemical_group.name }}</small>
           </div>
-          <div class="col-md-8">
+          <div class="card-body">
             <div class="row">
-              <div class="col-md-6">
-                <h6><i class="bi bi-info-circle"></i> Compound Properties</h6>
-                <table class="table table-sm">
-                  <tr><td><strong>IUPAC Name:</strong></td><td>3-(1H-imidazol-4-yl)propanoic acid</td></tr>
-                  <tr><td><strong>Molecular Formula:</strong></td><td>C₆H₈N₂O₂</td></tr>
-                  <tr><td><strong>Molecular Weight:</strong></td><td>140.14 g/mol</td></tr>
-                  <tr><td><strong>CAS Number:</strong></td><td>104-98-3</td></tr>
-                  <tr><td><strong>Solubility:</strong></td><td>Water soluble</td></tr>
-                  <tr><td><strong>Source:</strong></td><td>Bacterial metabolism</td></tr>
-                </table>
-              </div>
-              <div class="col-md-6">
-                <h6><i class="bi bi-heart-pulse"></i> Therapeutic Relevance</h6>
-                <div class="mb-2">
-                  <span class="badge bg-danger">Atherosclerosis Driver</span>
-                  <span class="badge bg-info">Metabolite</span>
-                  <span class="badge bg-success">Therapeutic Target</span>
+              <div class="col-12 mb-2">
+                {% if compound.molecular_structure %}
+                <div class="text-center bg-light p-2 rounded">
+                  <small class="text-muted">{{ compound.molecular_formula }}</small>
                 </div>
-                <p class="small">
-                  Imidazole propionate is a bacterial metabolite that acts as a key driver of atherosclerosis 
-                  through mTORC1 activation and metabolic dysfunction. It represents a promising therapeutic 
-                  target for cardiovascular disease intervention.
-                </p>
+                {% endif %}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+            
+            <h6 class="mt-2">Properties</h6>
+            <table class="table table-sm">
+              {% if compound.molecular_weight %}
+              <tr><td><strong>MW:</strong></td><td>{{ compound.molecular_weight }}</td></tr>
+              {% endif %}
+              {% if compound.cas_number %}
+              <tr><td><strong>CAS:</strong></td><td>{{ compound.cas_number }}</td></tr>
+              {% endif %}
+              <tr><td><strong>Group:</strong></td><td>{{ compound.biochemical_group.name }}</td></tr>
+            </table>
 
-<!-- Mechanism of Action -->
-<div class="row mt-4">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Mechanism of Action</h5>
-      </div>
-      <div class="card-body">
-        <div class="pathway-diagram bg-light p-3 rounded">
-          <div class="text-center mb-3">
-            <strong>Imidazole Propionate → Atherosclerosis Pathway</strong>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge bg-primary">Bacterial Production</span>
-            <i class="bi bi-arrow-right"></i>
-            <span class="badge bg-warning">Gut Absorption</span>
-          </div>
-          <div class="text-center mb-2">
-            <i class="bi bi-arrow-down"></i>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge bg-info">mTORC1 Activation</span>
-            <i class="bi bi-arrow-right"></i>
-            <span class="badge bg-danger">Metabolic Dysfunction</span>
-          </div>
-          <div class="text-center mb-2">
-            <i class="bi bi-arrow-down"></i>
-          </div>
-          <div class="text-center">
-            <span class="badge bg-dark">Atherosclerotic Plaque Formation</span>
-          </div>
-        </div>
-        <div class="mt-3">
-          <h6>Key Targets:</h6>
-          <ul class="list-unstyled">
-            <li><i class="bi bi-dot"></i> mTORC1 signaling pathway</li>
-            <li><i class="bi bi-dot"></i> Insulin sensitivity modulation</li>
-            <li><i class="bi bi-dot"></i> Lipid metabolism disruption</li>
-            <li><i class="bi bi-dot"></i> Inflammatory response activation</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Research Data</h5>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-6 text-center">
-            <div class="bg-light p-3 rounded mb-2">
-              <h4 class="text-primary mb-1">2.5x</h4>
-              <small>Increased CVD Risk</small>
+            {% if compound.therapeutic_areas %}
+            <div class="mb-2">
+              {% for area in compound.therapeutic_areas %}
+              <span class="badge bg-{{ area.color }}">{{ area.name }}</span>
+              {% endfor %}
             </div>
-          </div>
-          <div class="col-6 text-center">
-            <div class="bg-light p-3 rounded mb-2">
-              <h4 class="text-warning mb-1">40%</h4>
-              <small>mTORC1 Activation</small>
-            </div>
-          </div>
-          <div class="col-6 text-center">
-            <div class="bg-light p-3 rounded mb-2">
-              <h4 class="text-info mb-1">15%</h4>
-              <small>Insulin Resistance</small>
-            </div>
-          </div>
-          <div class="col-6 text-center">
-            <div class="bg-light p-3 rounded mb-2">
-              <h4 class="text-success mb-1">60%</h4>
-              <small>Reduction Potential</small>
-            </div>
-          </div>
-        </div>
-        <div class="mt-3">
-          <h6>Recent Studies:</h6>
-          <ul class="small">
-            <li>Association with T2D and atherosclerosis (Nature, 2018)</li>
-            <li>mTORC1-dependent metabolic effects (Cell Metabolism, 2019)</li>
-            <li>Therapeutic intervention strategies (JACC, 2021)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+            {% endif %}
 
-<!-- Therapeutic Applications -->
-<div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0"><i class="bi bi-prescription2"></i> Therapeutic Applications & Drug Development</h5>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card border-success">
-              <div class="card-header bg-success text-white">
-                <h6 class="mb-0">Direct Inhibition</h6>
-              </div>
-              <div class="card-body">
-                <ul class="list-unstyled">
-                  <li><i class="bi bi-check-circle text-success"></i> Competitive inhibitors</li>
-                  <li><i class="bi bi-check-circle text-success"></i> Allosteric modulators</li>
-                  <li><i class="bi bi-clock text-warning"></i> Synthetic analogues</li>
-                  <li><i class="bi bi-clock text-warning"></i> Prodrug strategies</li>
-                </ul>
-              </div>
-            </div>
+            <p class="small text-muted">{{ compound.description[:100] }}...</p>
           </div>
-          <div class="col-md-4">
-            <div class="card border-info">
-              <div class="card-header bg-info text-white">
-                <h6 class="mb-0">Pathway Modulation</h6>
-              </div>
-              <div class="card-body">
-                <ul class="list-unstyled">
-                  <li><i class="bi bi-check-circle text-success"></i> mTORC1 inhibitors</li>
-                  <li><i class="bi bi-check-circle text-success"></i> Metformin analogs</li>
-                  <li><i class="bi bi-clock text-warning"></i> AMPK activators</li>
-                  <li><i class="bi bi-clock text-warning"></i> Insulin sensitizers</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card border-warning">
-              <div class="card-header bg-warning text-white">
-                <h6 class="mb-0">Microbiome Targeting</h6>
-              </div>
-              <div class="card-body">
-                <ul class="list-unstyled">
-                  <li><i class="bi bi-clock text-warning"></i> Probiotic interventions</li>
-                  <li><i class="bi bi-clock text-warning"></i> Prebiotic strategies</li>
-                  <li><i class="bi bi-clock text-warning"></i> Bacterial enzyme inhibitors</li>
-                  <li><i class="bi bi-x-circle text-danger"></i> Antibiotic approaches</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Related Compounds -->
-<div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0"><i class="bi bi-collection"></i> Related Compounds</h5>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h6>Histidine</h6>
-                <small class="text-muted">Precursor</small>
-                <br>
-                <span class="badge bg-secondary">C₆H₉N₃O₂</span>
-                <p class="small mt-2">Amino acid precursor of imidazole propionate through bacterial metabolism</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h6>Urocanic acid</h6>
-                <small class="text-muted">Intermediate</small>
-                <br>
-                <span class="badge bg-secondary">C₆H₆N₂O₂</span>
-                <p class="small mt-2">Histidine metabolite in the pathway to imidazole propionate</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h6>Imidazole acetate</h6>
-                <small class="text-muted">Analog</small>
-                <br>
-                <span class="badge bg-secondary">C₅H₆N₂O₂</span>
-                <p class="small mt-2">Structural analog with different metabolic effects</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card">
-              <div class="card-body text-center">
-                <h6>TMAO</h6>
-                <small class="text-muted">Co-factor</small>
-                <br>
-                <span class="badge bg-secondary">C₃H₉NO</span>
-                <p class="small mt-2">Trimethylamine oxide - another gut-derived CVD risk factor</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Computational Analysis Section -->
-<div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0"><i class="bi bi-cpu"></i> Computational Analysis</h5>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <h6>Molecular Dynamics Simulation</h6>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" value="Imidazole propionate" readonly>
-              <button class="btn btn-primary" onclick="runMDSimulation()">
-                <i class="bi bi-play"></i> Run MD Simulation
+          <div class="card-footer">
+            <div class="btn-group w-100" role="group">
+              <a href="{{ url_for('main.compound_detail', id=compound.id) }}" class="btn btn-primary">
+                <i class="bi bi-eye"></i> View
+              </a>
+              <button class="btn btn-outline-success" onclick="addToCollection({{ compound.id }})">
+                <i class="bi bi-bookmark-plus"></i>
+              </button>
+              <button class="btn btn-outline-info" onclick="shareCompound({{ compound.id }})">
+                <i class="bi bi-share"></i>
               </button>
             </div>
-            <div id="md-result" class="bg-light p-3 rounded small">
-              Ready to simulate molecular dynamics...
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Table View (Hidden by default) -->
+    <div id="compounds-table" class="table-responsive" style="display: none;">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>
+              <a href="{{ url_for('main.compounds', sort='name', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                Name <i class="bi bi-arrow-up-down"></i>
+              </a>
+            </th>
+            <th>Group</th>
+            <th>Formula</th>
+            <th>
+              <a href="{{ url_for('main.compounds', sort='molecular_weight', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                MW <i class="bi bi-arrow-up-down"></i>
+              </a>
+            </th>
+            <th>Therapeutic Areas</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for compound in compounds %}
+          <tr>
+            <td>
+              <i class="bi bi-{{ compound.icon }}"></i>
+              <a href="{{ url_for('main.compound_detail', id=compound.id) }}">{{ compound.name }}</a>
+            </td>
+            <td>
+              <span class="badge bg-{{ compound.biochemical_group.color }}">
+                {{ compound.biochemical_group.symbol }}
+              </span>
+              {{ compound.biochemical_group.name }}
+            </td>
+            <td><code>{{ compound.molecular_formula }}</code></td>
+            <td>{{ compound.molecular_weight }} g/mol</td>
+            <td>
+              {% for area in compound.therapeutic_areas %}
+              <span class="badge bg-{{ area.color }} me-1">{{ area.name }}</span>
+              {% endfor %}
+            </td>
+            <td>
+              <div class="btn-group" role="group">
+                <a href="{{ url_for('main.compound_detail', id=compound.id) }}" class="btn btn-sm btn-primary">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <button class="btn btn-sm btn-outline-success" onclick="addToCollection({{ compound.id }})">
+                  <i class="bi bi-bookmark-plus"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-info" onclick="shareCompound({{ compound.id }})">
+                  <i class="bi bi-share"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Compound pagination">
+      <ul class="pagination justify-content-center">
+        {% if pagination.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('main.compounds', page=pagination.prev_num, **request.args) }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in pagination.iter_pages() %}
+          {% if page_num %}
+            {% if page_num != pagination.page %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('main.compounds', page=page_num, **request.args) }}">{{ page_num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+            {% endif %}
+          {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+          {% endif %}
+        {% endfor %}
+        
+        {% if pagination.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('main.compounds', page=pagination.next_num, **request.args) }}">Next</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</div>
+
+{% else %}
+<!-- No results message -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <h4 class="mt-3">No compounds found</h4>
+        <p class="text-muted">Try adjusting your search criteria or browse all compounds.</p>
+        <a href="{{ url_for('main.compounds') }}" class="btn btn-primary">
+          <i class="bi bi-arrow-clockwise"></i> Show All Compounds
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Quick Stats -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Database Statistics</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 text-center">
+            <div class="bg-light p-3 rounded">
+              <h4 class="text-primary">{{ stats.total_compounds }}</h4>
+              <small>Total Compounds</small>
             </div>
           </div>
-          <div class="col-md-6">
-            <h6>Docking Analysis</h6>
-            <select class="form-select mb-2">
-              <option>mTORC1 binding site</option>
-              <option>Insulin receptor</option>
-              <option>AMPK binding domain</option>
-            </select>
-            <button class="btn btn-success w-100 mb-2" onclick="runDocking()">
-              <i class="bi bi-bullseye"></i> Perform Docking
-            </button>
-            <div id="docking-result" class="bg-light p-3 rounded small">
-              Select target and run docking analysis...
+          <div class="col-md-3 text-center">
+            <div class="bg-light p-3 rounded">
+              <h4 class="text-success">{{ stats.biochemical_groups }}</h4>
+              <small>Biochemical Groups</small>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <div class="bg-light p-3 rounded">
+              <h4 class="text-info">{{ stats.therapeutic_areas }}</h4>
+              <small>Therapeutic Areas</small>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <div class="bg-light p-3 rounded">
+              <h4 class="text-warning">{{ stats.recent_additions }}</h4>
+              <small>Added This Month</small>
             </div>
           </div>
         </div>
@@ -367,82 +312,245 @@
   </div>
 </div>
 
-<!-- Action Buttons -->
+<!-- Research Tools -->
 <div class="row mt-4">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
         <h5 class="card-title"><i class="bi bi-tools"></i> Research Tools</h5>
         <div class="btn-group" role="group">
-          <button class="btn btn-outline-primary" onclick="exportData()">
-            <i class="bi bi-download"></i> Export Data
+          <button class="btn btn-outline-primary" onclick="exportSelected()">
+            <i class="bi bi-download"></i> Export Results
           </button>
           <button class="btn btn-outline-info" onclick="sharePeerData()">
             <i class="bi bi-share"></i> Share via P2P
           </button>
-          <button class="btn btn-outline-success" onclick="addToCollection()">
-            <i class="bi bi-bookmark-plus"></i> Add to Collection
+          <button class="btn btn-outline-success" onclick="bulkAnalysis()">
+            <i class="bi bi-cpu"></i> Bulk Analysis
           </button>
           <a href="{{ url_for('main.simulate') }}" class="btn btn-outline-warning">
             <i class="bi bi-calculator"></i> Run Simulation
           </a>
+          <button class="btn btn-outline-danger" onclick="compareSelected()">
+            <i class="bi bi-arrows-angle-contract"></i> Compare Selected
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Advanced Filters Modal -->
+<div class="modal fade" id="advancedFiltersModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Advanced Filters</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="GET" action="{{ url_for('main.compounds') }}">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Molecular Properties</h6>
+              <div class="mb-3">
+                <label class="form-label">Molecular Weight Range</label>
+                <div class="row">
+                  <div class="col-6">
+                    <input type="number" class="form-control" name="mw_min" placeholder="Min" 
+                           value="{{ request.args.get('mw_min', '') }}">
+                  </div>
+                  <div class="col-6">
+                    <input type="number" class="form-control" name="mw_max" placeholder="Max"
+                           value="{{ request.args.get('mw_max', '') }}">
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Solubility</label>
+                <select class="form-select" name="solubility">
+                  <option value="">Any</option>
+                  <option value="water" {% if request.args.get('solubility') == 'water' %}selected{% endif %}>Water Soluble</option>
+                  <option value="lipid" {% if request.args.get('solubility') == 'lipid' %}selected{% endif %}>Lipid Soluble</option>
+                  <option value="both" {% if request.args.get('solubility') == 'both' %}selected{% endif %}>Amphipathic</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h6>Research Status</h6>
+              <div class="mb-3">
+                <label class="form-label">Clinical Phase</label>
+                <select class="form-select" name="clinical_phase">
+                  <option value="">Any Phase</option>
+                  <option value="preclinical" {% if request.args.get('clinical_phase') == 'preclinical' %}selected{% endif %}>Preclinical</option>
+                  <option value="phase1" {% if request.args.get('clinical_phase') == 'phase1' %}selected{% endif %}>Phase I</option>
+                  <option value="phase2" {% if request.args.get('clinical_phase') == 'phase2' %}selected{% endif %}>Phase II</option>
+                  <option value="phase3" {% if request.args.get('clinical_phase') == 'phase3' %}selected{% endif %}>Phase III</option>
+                  <option value="approved" {% if request.args.get('clinical_phase') == 'approved' %}selected{% endif %}>Approved</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Research Priority</label>
+                <select class="form-select" name="priority">
+                  <option value="">Any Priority</option>
+                  <option value="high" {% if request.args.get('priority') == 'high' %}selected{% endif %}>High</option>
+                  <option value="medium" {% if request.args.get('priority') == 'medium' %}selected{% endif %}>Medium</option>
+                  <option value="low" {% if request.args.get('priority') == 'low' %}selected{% endif %}>Low</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-// Search functionality
-function searchCompounds() {
-  const query = document.getElementById('compound-search').value;
-  console.log('Searching for:', query);
-  // Implement search logic
+// View mode switching
+document.querySelectorAll('input[name="view-mode"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const cardsView = document.getElementById('compounds-cards');
+    const tableView = document.getElementById('compounds-table');
+    
+    if (this.id === 'card-view') {
+      cardsView.style.display = 'flex';
+      tableView.style.display = 'none';
+    } else {
+      cardsView.style.display = 'none';
+      tableView.style.display = 'block';
+    }
+  });
+});
+
+// Filter functions
+function filterByGroup(group) {
+  const url = new URL(window.location);
+  url.searchParams.set('group', group);
+  window.location.href = url.toString();
 }
 
-// Simulation functions
-function runMDSimulation() {
-  const resultDiv = document.getElementById('md-result');
-  resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div> Running simulation...';
+// Collection management
+function addToCollection(compoundId) {
+  fetch(`/api/compounds/${compoundId}/add-to-collection`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token() }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showToast('Added to collection!', 'success');
+    } else {
+      showToast('Error adding to collection', 'error');
+    }
+  });
+}
+
+// P2P sharing
+function shareCompound(compoundId) {
+  fetch(`/api/compounds/${compoundId}/share`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token() }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showToast('Shared via P2P network!', 'success');
+    }
+  });
+}
+
+// Bulk operations
+function exportSelected() {
+  const selected = getSelectedCompounds();
+  if (selected.length === 0) {
+    showToast('No compounds selected', 'warning');
+    return;
+  }
   
-  setTimeout(() => {
-    resultDiv.innerHTML = `
-      <strong>MD Simulation Results:</strong><br>
-      • Average RMSD: 2.3 Å<br>
-      • Binding affinity: -7.2 kcal/mol<br>
-      • Simulation time: 100 ns<br>
-      • Stable conformation identified
-    `;
-  }, 3000);
+  window.location.href = `/api/compounds/export?ids=${selected.join(',')}`;
 }
 
-function runDocking() {
-  const resultDiv = document.getElementById('docking-result');
-  resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div> Performing docking...';
+function bulkAnalysis() {
+  const selected = getSelectedCompounds();
+  if (selected.length < 2) {
+    showToast('Select at least 2 compounds for analysis', 'warning');
+    return;
+  }
   
-  setTimeout(() => {
-    resultDiv.innerHTML = `
-      <strong>Docking Results:</strong><br>
-      • Binding score: -8.1 kcal/mol<br>
-      • Key interactions: 3 H-bonds<br>
-      • Binding pocket: Active site<br>
-      • Druggability: High
-    `;
-  }, 2000);
+  window.location.href = `/analysis/bulk?compounds=${selected.join(',')}`;
 }
 
-// Export and sharing functions
-function exportData() {
-  alert('Exporting compound data...');
+function compareSelected() {
+  const selected = getSelectedCompounds();
+  if (selected.length < 2) {
+    showToast('Select at least 2 compounds to compare', 'warning');
+    return;
+  }
+  
+  window.location.href = `/compare?compounds=${selected.join(',')}`;
 }
 
-function sharePeerData() {
-  alert('Sharing data via P2P network...');
+function getSelectedCompounds() {
+  return Array.from(document.querySelectorAll('input[name="selected_compounds"]:checked'))
+              .map(cb => cb.value);
 }
 
-function addToCollection() {
-  alert('Added to your compound collection!');
+// Toast notifications
+function showToast(message, type = 'info') {
+  // Implementation would depend on your notification system
+  console.log(`${type.toUpperCase()}: ${message}`);
 }
+
+// Auto-submit search on enter
+document.getElementById('compound-search').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    this.form.submit();
+  }
+});
 </script>
+
+<!-- Add compound selection checkboxes (if needed for bulk operations) -->
+<style>
+.compound-selector {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.card {
+  position: relative;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.75em;
+}
+
+@media (max-width: 768px) {
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn-group > .btn {
+    border-radius: 0.25rem !important;
+    margin-bottom: 2px;
+  }
+}
+</style>
 
 {% endblock %}
