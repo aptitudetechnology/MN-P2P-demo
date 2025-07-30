@@ -1,46 +1,50 @@
-Sure! Here's a clear, step-by-step instruction text you can put in `copilot-instructions.md` or use to prompt GitHub Copilot. It explains the import error and asks it to inspect the source to find and fix the issue:
+Certainly! Here's a **Copilot instruction block** that focuses on gathering more information without suggesting explicit fixes:
 
 ---
 
-# GitHub Copilot Instructions: Fix ImportError for `db`
+# GitHub Copilot Instructions: Gather Information About ImportError in `models`
 
-## Problem Description
+## Context
 
-When running `python3 app.py`, the application crashes with:
+The application fails with the following error:
 
 ```
-ImportError: cannot import name 'db' from 'models' (unknown location)
+ImportError: cannot import name 'Compound' from 'models' (unknown location)
 ```
 
-This means the app tries to import `db` from the `models` package or module, but it cannot find `db` there.
+This occurs during the import statement:
 
-## What to do
+```python
+from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study, db
+```
 
-1. Inspect the source code to find where `db` (the database instance, likely from `SQLAlchemy`) is defined or instantiated.
+## Task
 
-2. Common places to check include:
+Please inspect the codebase and collect the following information to help diagnose the issue:
 
-   * `models/__init__.py`
-   * `models.py`
-   * `extensions.py`
-   * `database.py`
-   * Or any other module related to database setup
+1. Does the `models` directory exist, and does it include an `__init__.py` file?
+2. Are the following classes defined anywhere in the `models` package?
 
-3. Check if the `models` directory has an `__init__.py`. If not, suggest adding it or adjusting the import accordingly.
+   * `Compound`
+   * `BiochemicalGroup`
+   * `TherapeuticArea`
+   * `Disease`
+   * `Study`
+3. In which files are each of these classes defined?
+4. Is the `db` instance defined or imported in `models`, or is it defined elsewhere (such as in `extensions.py`)?
+5. Are there any circular import issues that might prevent successful loading of model classes?
+6. What are the exact relative or absolute import paths used within the `models` package?
 
-4. Determine the correct import path for `db` and update `app.py`'s import statement accordingly.
+## Output
 
-5. Suggest fixes:
+Provide:
 
-   * If `db` is defined in another module, change `from models import db` to `from <correct_module> import db`.
-   * If `db` is missing, suggest adding the standard `db = SQLAlchemy()` initialization in an appropriate place.
+* A list of model classes and the file in which each one is defined.
+* Confirmation of whether `__init__.py` exists and what it contains.
+* Where `db` is defined and whether it's accessible from the `models` package.
 
-## Additional Tips
-
-* Look for `db = SQLAlchemy()` or similar patterns.
-* Ensure all imports follow Python package/module conventions.
-* Explain any changes you make.
+Do not suggest changes or fixes at this stage—just gather and summarize this information.
 
 ---
 
-Would you like me to generate a pull request or a code snippet with the corrected import?
+Let me know when you're ready to move to the next step (analysis or fix).
