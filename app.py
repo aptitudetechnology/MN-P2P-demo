@@ -3,7 +3,7 @@ ModularNucleoid P2P Demo
 A Flask web application: ModularNucleoid P2P Demo (Fortran + Wasm + PeerJS)
 Author: SMILHS
 Generated: 2025-07-30 11:44:47
-Updated: 2025-07-31 - Added SQLAlchemy integration and Application Factory
+Updated: 2025-07-31 - Added SQLAlchemy integration and Application Factory (Circular Import Fix)
 """
 import os
 import logging
@@ -20,10 +20,6 @@ import json
 
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
-
-# IMPORTANT: Import db from models here, but do NOT initialize it with app yet.
-# This db object is the SQLAlchemy instance itself.
-from models import db
 
 # Logging setup - moved outside create_app for global access
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -54,8 +50,13 @@ def create_app():
     # Ensure data directory exists
     (BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
 
+    # IMPORTANT: Import db from models *inside* create_app, after the app instance is created.
+    # This breaks the circular import dependency.
+    from models import db 
+    
     # Initialize extensions with the app instance
     db.init_app(app) # Initialize db with the Flask app instance
+    
     migrate = Migrate(app, db)
     CORS(app)
     cache = Cache(app)
@@ -150,7 +151,7 @@ def init_db_command():
     click.echo('Initializing database...')
     app_instance = create_app() # Create an app instance for the CLI command
     with app_instance.app_context():
-        from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+        from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
         db.create_all()
     click.echo('Database initialized!')
 
@@ -160,7 +161,7 @@ def seed_db_command():
     click.echo('Seeding database...')
     app_instance = create_app()
     with app_instance.app_context():
-        from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+        from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
         # Create biochemical groups
         groups_data = [
             {'name': 'Proteins', 'category': 'macromolecules', 'color': '#FF6B6B', 'description': 'Large biomolecules consisting of amino acid chains'},
@@ -317,7 +318,7 @@ def import_compounds_command(file):
         imported_count = 0
         app_instance = create_app()
         with app_instance.app_context():
-            from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+            from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
             for compound_data in compounds_data:
                 # Check if compound already exists
                 existing_compound = Compound.query.filter_by(name=compound_data['name']).first()
@@ -369,7 +370,7 @@ def db_stats_command():
     """Show database statistics."""
     app_instance = create_app()
     with app_instance.app_context():
-        from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+        from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
         try:
             # Get counts
             compounds_count = Compound.query.count()
@@ -412,7 +413,7 @@ def reset_db_command():
         click.echo('Resetting database...')
         app_instance = create_app()
         with app_instance.app_context():
-            from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
+            from models import db, Compound, BiochemicalGroup, TherapeuticArea, Disease, Study # Import models here
             db.drop_all()
             db.create_all()
         click.echo('Database reset complete!')
