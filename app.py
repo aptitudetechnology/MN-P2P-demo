@@ -18,7 +18,7 @@ from flask_limiter.util import get_remote_address
 from flask_caching import Cache
 from datetime import datetime
 import json
-from extensions import db, migrate
+from extensions import db, migrate, cache, limiter
 
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
