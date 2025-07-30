@@ -38,8 +38,15 @@ app.config['CACHE_TYPE'] = 'simple'
 
 ## 1. Initialize db and migrate instances globally, without binding to app yet.
 # This makes 'db' available for models to import without circular dependency.
-db = SQLAlchemy()
-migrate = Migrate()
+#db = SQLAlchemy()
+#migrate = Migrate()
+
+db.init_app(app)
+migrate.init_app(app, db)
+cache.init_app(app)
+limiter.init_app(app, key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
+
+
 
 # 2. Initialize extensions by binding them to the app instance
 db.init_app(app) # <--- db is now bound to app here
