@@ -6,6 +6,8 @@ SQLAlchemy models for compounds, biochemical groups, and related entities
 from datetime import datetime
 import json
 from app import db  # Only import db, not app or anything else
+from extensions import db
+
 
 # Initialize db - this will be configured by app.py
 #db = SQLAlchemy()
