@@ -25,6 +25,8 @@ eventlet==0.33.3
 numpy==1.26.4 # Latest version compatible with Python 3.8 to 3.12 (as of early 2024, check pypi for latest)
 scipy==1.11.4 # Latest version compatible with Python 3.8 to 3.12 (as of early 2024, check pypi for latest)
 
+Flask-WTF==1.2.1 # Compatible with Flask 2.3.3
+
 # Removed subprocess-runner as it's not found and subprocess from stdlib is an alternative.
 # If automating Fortran→WASM builds via subprocess, use Python's built-in 'subprocess' module.
 # import subprocess
