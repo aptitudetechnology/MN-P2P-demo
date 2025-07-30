@@ -1,6 +1,22 @@
+# Core Flask framework
 Flask==2.3.3
 Werkzeug
+
+# Task queue and server
 celery
 gunicorn
-python-dotenv
 redis
+
+# Environment config
+python-dotenv
+
+# WebSocket support (for custom signaling server or real-time sync)
+flask-socketio
+eventlet
+
+# Optional: Fortran-compatible scientific computing in Python
+numpy
+scipy
+
+# Optional: If automating Fortran→WASM builds via subprocess
+subprocess-runner  # Or use subprocess from Python stdlib
