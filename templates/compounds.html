@@ -284,25 +284,25 @@
         <div class="row">
           <div class="col-md-3 text-center">
             <div class="bg-light p-3 rounded">
-              <h4 class="text-primary">{{ total_compounds }}</h4>
+              <h4 class="text-primary">{{ stats.total_compounds }}</h4> {# Corrected: Accessing from stats #}
               <small>Total Compounds</small>
             </div>
           </div>
           <div class="col-md-3 text-center">
             <div class="bg-light p-3 rounded">
-             <h4 class="text-success">{{ stats.biochemical_groups_count }}</h4>
+             <h4 class="text-success">{{ stats.biochemical_groups }}</h4> {# Corrected: Accessing from stats #}
               <small>Biochemical Groups</small>
             </div>
           </div>
           <div class="col-md-3 text-center">
             <div class="bg-light p-3 rounded">
-              <h4 class="text-info">{{ stats.therapeutic_areas }}</h4>
+              <h4 class="text-info">{{ stats.therapeutic_areas }}</h4> {# Corrected: Accessing from stats #}
               <small>Therapeutic Areas</small>
             </div>
           </div>
           <div class="col-md-3 text-center">
             <div class="bg-light p-3 rounded">
-              <h4 class="text-warning">{{ stats.recent_additions }}</h4>
+              <h4 class="text-warning">{{ stats.recent_additions }}</h4> {# Corrected: Accessing from stats #}
               <small>Added This Month</small>
             </div>
           </div>
@@ -328,7 +328,7 @@
           <button class="btn btn-outline-success" onclick="bulkAnalysis()">
             <i class="bi bi-cpu"></i> Bulk Analysis
           </button>
-          <a href="{{ url_for('main.simulate') }}" class="btn btn-outline-warning">
+          <a href="{{ url_for('main.simulate') }}" class="btn btn-outline-warning"> {# Corrected: 'main.simulate' route is now defined #}
             <i class="bi bi-calculator"></i> Run Simulation
           </a>
           <button class="btn btn-outline-danger" onclick="compareSelected()">
