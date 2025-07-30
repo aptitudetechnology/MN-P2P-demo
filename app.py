@@ -35,22 +35,25 @@ app.config['CACHE_TYPE'] = 'simple'
 # Ensure data directory exists
 (BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
 
-# Initialize extensions
-# db is initialized here with the app instance
-db = SQLAlchemy(app) # <--- THIS LINE IS NOW UNCOMMENTED AND CORRECT
-migrate = Migrate(app, db)
+## 1. Initialize db and migrate instances globally, without binding to app yet.
+# This makes 'db' available for models to import without circular dependency.
+db = SQLAlchemy()
+migrate = Migrate()
+
+# 2. Initialize extensions by binding them to the app instance
+db.init_app(app) # <--- db is now bound to app here
+migrate.init_app(app, db)
 CORS(app)
 cache = Cache(app)
-
-# CORRECTED: Explicitly pass 'app' and 'key_func' as keyword arguments
 limiter = Limiter(
-    app=app, # Explicitly assign the Flask app instance
-    key_func=get_remote_address, # Explicitly assign the key function
+    app=app,
+    key_func=get_remote_address,
     default_limits=["200 per day", "50 per hour"]
 )
 
-# Import models *after* db and other extensions are initialized with the app
-# This prevents circular import issues where models try to use 'db' before it's fully set up
+# 3. Import models *after* db and other extensions are initialized globally
+# AND after db.init_app(app) has been called.
+# This prevents circular import issues.
 from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
 
 # Import blueprints from the routes package
