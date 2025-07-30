@@ -75,6 +75,11 @@ def inject_globals():
             "icon": "home"
         },
         {
+        "name": "P2P Demo",
+        "route": "/p2p-demo",
+        "icon": "diagram-2"
+        },
+        {
             "name": "Settings",
             "route": "/settings",
             "icon": "gear"

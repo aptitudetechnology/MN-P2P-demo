@@ -1,0 +1,20 @@
+{% extends "layouts/base.html" %}
+{% block title %}P2P ModularNucleoid{% endblock %}
+
+{% block content %}
+<h1>ModularNucleoid P2P (Wasm + PeerJS)</h1>
+
+<div class="mb-3">
+  <input class="form-control" id="peer-id" placeholder="Connect to peer ID">
+  <button class="btn btn-primary mt-2" onclick="connect()">Connect</button>
+</div>
+
+<textarea class="form-control" id="sequence" rows="4" placeholder="Enter DNA sequence"></textarea>
+<button class="btn btn-success mt-2" onclick="send()">Send to peer</button>
+
+<h3 class="mt-4">Result:</h3>
+<pre id="result"></pre>
+
+<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

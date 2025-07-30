@@ -36,3 +36,8 @@ def submit_feedback():
         else:
             flash('Feedback cannot be empty.', 'error')
     return render_template('feedback.html', title='Submit Feedback')
+
+@main_bp.route('/p2p-demo')
+def p2p_demo():
+    """P2P WebAssembly demo"""
+    return render_template('p2p_demo.html', title='P2P Demo')
