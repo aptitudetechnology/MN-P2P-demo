@@ -1,95 +1,99 @@
-import logging
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-# Corrected: Changed to absolute import for models
-from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study, db
+from flask import Blueprint, render_template, current_app, request, jsonify
 from sqlalchemy import func
+from datetime import datetime, timedelta # Ensure datetime and timedelta are imported
+
+# Import models directly. They already get 'db' from 'app' via 'from app import db' in models.py
+from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+
 
 main_bp = Blueprint('main', __name__)
-logger = logging.getLogger(__name__)
 
 @main_bp.route('/')
 def dashboard():
-    """Renders the dashboard page."""
-    # Example data for dashboard, replace with actual data fetching if needed
-    total_compounds = Compound.query.count()
-    total_biochemical_groups = BiochemicalGroup.query.count()
-    total_therapeutic_areas = TherapeuticArea.query.count()
-    
-    # You might want to fetch more specific data for the dashboard here
-    
-    return render_template('dashboard.html', 
-                           title='Dashboard',
-                           total_compounds=total_compounds,
-                           total_biochemical_groups=total_biochemical_groups,
-                           total_therapeutic_areas=total_therapeutic_areas)
+    """
+    Renders the main dashboard page.
+    Fetches comprehensive data for display, including P2P/DNA context and stats.
+    """
+    # Access the db instance from the current application context
+    db = current_app.extensions['sqlalchemy']
+    try:
+        # Data for Quick Stats and Recent Compounds sections
+        total_compounds = db.session.query(Compound).count()
+        recent_compounds = db.session.query(Compound).order_by(Compound.created_at.desc()).limit(5).all()
+
+        # Pass datetime.utcnow() for server time display
+        server_datetime = datetime.utcnow()
+
+        return render_template('dashboard.html', title='Dashboard',
+                               total_compounds=total_compounds,
+                               recent_compounds=recent_compounds,
+                               datetime=server_datetime) # Pass datetime for server time display
+    except Exception as e:
+        current_app.logger.error(f"Error loading dashboard data: {e}")
+        # Render the dashboard even if data loading fails, showing an error message
+        return render_template('dashboard.html', title='Dashboard',
+                               error_message="Could not load dashboard data. Database might be empty or inaccessible.")
 
 @main_bp.route('/compounds')
 def compounds():
-    """Renders the compounds listing page with search and filters."""
+    """
+    Renders the compounds listing page.
+    Fetches all compounds and relevant statistics to display.
+    """
+    # Access the db instance from the current application context
+    db = current_app.extensions['sqlalchemy']
     try:
-        # Fetch all compounds (or apply search/filter logic later)
-        all_compounds = Compound.query.all()
+        all_compounds = db.session.query(Compound).all()
+        
+        # Calculate statistics needed by the template
+        total_compounds = db.session.query(Compound).count()
+        biochemical_groups_count = db.session.query(BiochemicalGroup).count()
+        therapeutic_areas_count = db.session.query(TherapeuticArea).count()
 
-        # --- Calculate statistics for the compounds page ---
-        # Total counts
-        total_compounds = Compound.query.count()
-        biochemical_groups_count = BiochemicalGroup.query.count()
-        therapeutic_areas_count = TherapeuticArea.query.count()
+        # Calculate recent additions (e.g., compounds added in the last 30 days)
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        recent_additions_count = db.session.query(Compound).filter(Compound.created_at >= thirty_days_ago).count()
 
-        # Compounds by Clinical Phase
-        phase_stats_query = db.session.query(
-            Compound.clinical_phase,
-            func.count(Compound.id)
-        ).group_by(Compound.clinical_phase).all()
-        # Convert to a dictionary for easier access in template
-        phase_stats = {phase or "Unknown": count for phase, count in phase_stats_query}
-
-        # Compounds by Biochemical Group
-        group_stats_query = db.session.query(
-            BiochemicalGroup.name,
-            func.count(Compound.id)
-        ).outerjoin(Compound, BiochemicalGroup.id == Compound.biochemical_group_id).group_by(BiochemicalGroup.name).all()
-        # Convert to a dictionary
-        group_stats = {group: count for group, count in group_stats_query}
-
-        # Aggregate all stats into a single dictionary
+        # Create a stats dictionary to pass to the template
         stats = {
             'total_compounds': total_compounds,
-            'biochemical_groups_count': biochemical_groups_count, # Renamed for clarity
-            'therapeutic_areas_count': therapeutic_areas_count,   # Renamed for clarity
-            'phase_stats': phase_stats,
-            'group_stats': group_stats
+            'biochemical_groups': biochemical_groups_count,
+            'therapeutic_areas': therapeutic_areas_count,
+            'recent_additions': recent_additions_count,
         }
-        # --- End statistics calculation ---
 
-        return render_template('compounds.html', 
-                               title='Compounds',
+        # Fetch data for filters and periodic table navigation (if needed on compounds page)
+        biochemical_groups_data = db.session.query(BiochemicalGroup).all()
+        diseases_data = db.session.query(Disease).all()
+
+        return render_template('compounds.html', title='Compounds',
                                compounds=all_compounds,
-                               stats=stats) # Pass the calculated stats to the template
+                               stats=stats, # Pass the 'stats' dictionary
+                               biochemical_groups=biochemical_groups_data, # Pass groups for filters
+                               diseases=diseases_data) # Pass diseases for filters
     except Exception as e:
-        logger.error(f"Error loading compounds data: {e}")
-        flash('Error loading compounds data. Please try again later.', 'danger')
-        return redirect(url_for('main.dashboard')) # Redirect to dashboard or an error page
-
-@main_bp.route('/compound/<int:compound_id>')
-def compound_detail(compound_id):
-    """Renders the detail page for a specific compound."""
-    compound = Compound.query.get_or_404(compound_id)
-    return render_template('compound_detail.html', title=compound.name, compound=compound)
+        current_app.logger.error(f"Error loading compounds data: {e}")
+        return render_template('compounds.html', title='Compounds',
+                               error_message="Could not load compounds data. Database might be empty or inaccessible.")
 
 @main_bp.route('/p2p-demo')
 def p2p_demo():
     """Renders the P2P demo page."""
     return render_template('p2p_demo.html', title='P2P Demo')
 
-@main_bp.route('/simulate') # NEW: Placeholder route for /simulate
-def simulate():
-    """Renders a placeholder page for simulation."""
-    return render_template('simulate.html', title='Simulation')
-
 @main_bp.route('/settings')
 def settings():
     """Renders the settings page."""
     return render_template('settings.html', title='Settings')
 
-# Add other routes as needed
+@main_bp.route('/simulate')
+def simulate():
+    """Renders the simulation page."""
+    return render_template('simulate.html', title='Simulation')
+
+# You can add more routes here for specific compound details, etc.
+# @main_bp.route('/compound/<int:compound_id>')
+# def compound_detail(compound_id):
+#     db = current_app.extensions['sqlalchemy']
+#     compound = db.session.query(Compound).get_or_404(compound_id)
+#     return render_template('compound_detail.html', title=compound.name, compound=compound)
