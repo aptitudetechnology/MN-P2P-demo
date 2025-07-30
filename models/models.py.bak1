@@ -6,8 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 
-# Initialize db - this will be configured by app.py
-db = SQLAlchemy()
+# Get db instance from app context
+from flask import current_app
+db = current_app.extensions['sqlalchemy']
 
 # Association tables for many-to-many relationships
 compound_therapeutic_areas = db.Table('compound_therapeutic_areas',
