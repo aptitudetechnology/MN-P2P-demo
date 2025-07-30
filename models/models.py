@@ -2,12 +2,12 @@
 Database models for ModularNucleoid P2P Demo
 SQLAlchemy models for compounds, biochemical groups, and related entities
 """
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 
 # Initialize db - this will be configured by app.py
-db = SQLAlchemy()
+#db = SQLAlchemy()
 
 # Association tables for many-to-many relationships
 compound_therapeutic_areas = db.Table('compound_therapeutic_areas',
