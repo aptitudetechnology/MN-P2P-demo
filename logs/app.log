@@ -1,0 +1,1083 @@
+2025-07-30 11:44:55,748 - utils.database - INFO - Database initialized successfully
+2025-07-30 11:44:55,748 - __main__ - INFO - Starting ModularNucleoid P2P Demo on http://0.0.0.0:5000
+2025-07-30 11:44:55,751 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.111:5000
+2025-07-30 11:44:55,751 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-30 11:44:59,394 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:44:59,395 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:44:59,398 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:44:59] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:44:59,431 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:44:59] "GET /static/css/custom.css HTTP/1.1" 200 -
+2025-07-30 11:44:59,432 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:44:59] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-30 11:44:59,644 - __main__ - WARNING - 404 Not Found: /favicon.ico
+2025-07-30 11:44:59,645 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:44:59] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-30 11:45:01,098 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:01,099 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:01,100 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:01] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:01,121 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:01] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:01,122 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:01] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:02,025 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:02] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:45:02,048 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:02] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:02,050 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:03,322 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:03,323 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:03,324 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:03] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:03,347 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:03] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:03,348 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:03] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:12,018 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:12,019 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:12,020 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:12] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:12,038 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:12] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:12,040 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:12] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:13,484 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:13,485 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:13,486 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:13] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:13,507 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:13] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:13,508 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:13] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:14,120 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:14] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:45:14,141 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:14] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:14,142 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:14] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:15,137 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:15,138 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:15,140 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:15] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:15,160 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:15] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:15,162 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:15] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:15,862 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:15] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:45:15,888 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:15] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:15,890 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:15] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:16,753 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:16,754 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:16,755 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:16] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:16,779 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:16] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:16,781 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:16] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:17,493 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:17] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:45:17,515 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:17] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:17,516 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:17] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:18,949 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:18,949 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:45:18,950 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:18] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:45:18,974 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:18] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:18,975 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:18] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:19,646 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:19] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:45:19,666 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:19] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:45:19,668 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:19] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:20,390 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:20] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:45:20,407 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:20] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:45:20,408 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:45:20] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:48:07,107 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:07,108 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:07,109 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:07] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:48:08,475 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:08,476 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:08,477 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:08] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:48:08,503 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:08] "GET /static/css/custom.css HTTP/1.1" 200 -
+2025-07-30 11:48:08,505 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:08] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-30 11:48:08,890 - __main__ - WARNING - 404 Not Found: /favicon.ico
+2025-07-30 11:48:08,891 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-30 11:48:10,365 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:10,366 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:10,368 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:10] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:48:10,381 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:10] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:48:10,381 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:10] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:48:10,990 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:10,991 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:10,993 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:10] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:48:11,006 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:11] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:48:11,007 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:11] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:48:12,249 - app - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:12,250 - __main__ - ERROR - 500 Internal Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+Traceback (most recent call last):
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/routes/main.py", line 17, in dashboard
+    return render_template('dashboard.html', title='Dashboard')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/base.html", line 57, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/MN-P2P-demo/templates/dashboard.html", line 26, in block 'content'
+    <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chris/flask-wizard/flask-app-wizard/venv/lib/python3.12/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'datetime' is undefined
+2025-07-30 11:48:12,251 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:12] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-07-30 11:48:12,263 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:12] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-30 11:48:12,263 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:12] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:48:12,826 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:12] "GET /settings HTTP/1.1" 200 -
+2025-07-30 11:48:12,839 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:12] "[36mGET /static/css/custom.css HTTP/1.1[0m" 304 -
+2025-07-30 11:48:12,840 - werkzeug - INFO - 192.168.1.115 - - [30/Jul/2025 11:48:12] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>Welcome to ModularNucleoid P2P Demo</h1>
+        <p class="lead">A Flask web application: ModularNucleoid P2P Demo (Fortran + Wasm + PeerJS)</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-info-circle"></i> Status</h5>
+                <p class="card-text">System is running normally</p>
+                <span class="badge bg-success">Online</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-clock"></i> Last Updated</h5>
+                <p class="card-text">{{ format_datetime(datetime.now()) }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-gear"></i> Quick Actions</h5>
+                <a href="{{ url_for('main.settings') }}" class="btn btn-outline-primary btn-sm">Settings</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

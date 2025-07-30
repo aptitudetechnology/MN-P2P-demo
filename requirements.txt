@@ -1,0 +1,6 @@
+Flask==2.3.3
+Werkzeug
+celery
+gunicorn
+python-dotenv
+redis
