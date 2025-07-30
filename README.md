@@ -1,161 +1,139 @@
+
 # ModularNucleoid P2P Demo
 
-## Overview
+🌐 **Fortran + WebAssembly + P2P = Decentralized Science Apps**
 
-A Flask web application: ModularNucleoid P2P Demo (Fortran + Wasm + PeerJS)
+---
 
-This project was generated using the Flask App Generator Wizard.
+## What is ModularNucleoid?
 
-## Features
+ModularNucleoid is an experimental platform combining Fortran scientific computation, compiled to WebAssembly (WASM), and peer-to-peer (P2P) browser networking to create decentralized scientific applications—especially for nucleoid/DNA simulations.
 
-* **Modular Structure**: Organized into blueprints for clean code management.
-* **Database**: SQLite3 (lightweight, file-based database)
-* **Front-end**: Responsive UI with Bootstrap 5 and Bootstrap Icons.
-* **Configuration**: Environment variable based configuration using `.env`.
-* **Logging**: Basic application logging to console and file.
+---
 
-### Selected Features:
-* **User Authentication**: Yes
-* **File Upload Handling**: Yes
-* **REST API Endpoints**: Yes
-* **Background Task Support**: Yes
+## 🚀 Features & What You Can Do
 
-## Getting Started
+- Compile your ModularNucleoid core Fortran logic to WebAssembly.
+- Run heavy computations locally inside the browser using WASM.
+- Distribute computation and data directly between peers using P2P technologies.
+- Use WebRTC or libp2p to send/receive simulation data between browsers.
+- Each peer executes simulations independently — no central server required.
 
-### 1. Clone the repository (or extract the generated app)
+---
 
-```bash
-# If this was a git repo, you'd clone it
-# git clone https://github.com/your-repo/MN-P2P-demo.git
-# cd MN-P2P-demo
+## 🔁 P2P Architecture Overview
+
+```
+[User A] <--WebRTC/libp2p--> [User B] <---> [User C]
+       |                           |               |
+       |--- WASM Module (DNA calc) |               |
+       |   Runs in-browser         |               |
 ```
 
-### 2. Set up a virtual environment
+Each browser instance:
 
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
+- Loads the ModularNucleoid WebAssembly module.
+- Accepts DNA sequences or parameters from other peers.
+- Runs simulations or data transformations locally.
+- Shares results and syncs data with other peers.
 
-### 3. Install dependencies
+---
+
+## 🔧 How to Implement It
+
+### 1. Compile Fortran to WebAssembly
+
+- Use `gfortran` → `emcc` or other toolchains to compile Fortran source code into WASM.
+
+### 2. Create a JavaScript Wrapper
+
+- Expose key WASM functions like `simulate_nucleoid(...)`.
+- Manage WASM memory, buffers, and input/output conversion.
+
+### 3. Use a P2P Library in JavaScript
+
+Popular P2P libraries:
+
+- 🔄 **libp2p** (robust, used in IPFS)
+- 📡 **PeerJS** (easy WebRTC wrapper)
+- 🔁 **Gun.js** (P2P data sync & storage)
+
+Use these to:
+
+- Exchange input parameters and output results.
+- Coordinate distributed workloads between connected peers.
+
+### 4. Optional: P2P Storage & Sync
+
+- Use IPFS for sharing larger datasets or models.
+- Use Gun.js or OrbitDB for mutable, decentralized shared state.
+
+---
+
+## 🔐 Bonus: Privacy & Security
+
+- No central server means data stays on local peers unless explicitly shared.
+- Ideal for sensitive scientific or medical data.
+- Optionally encrypt data client-side (e.g. PGP in-browser) before P2P sharing.
+
+---
+
+## ⚡ Real-World Use Cases
+
+- Browser-based nucleoid/DNA simulations distributed across a research network.
+- Citizen science projects allowing collaborative DNA simulations.
+- Offline-first scientific apps with peer sync when connectivity resumes.
+
+---
+
+## 📦 Included Demo
+
+This project includes a minimal working prototype demonstrating:
+
+- Loading a dummy WASM module simulating Fortran computation.
+- Connecting two browser clients peer-to-peer via PeerJS.
+- Sending a DNA sequence to a peer and receiving processed results.
+- A Flask web interface with routes for dashboard, simulation, and P2P demo.
+
+---
+
+## 🚀 Getting Started
+
+1. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set up environment variables
-
-Copy the `.env` file and adjust settings as needed:
-
-```bash
-cp .env .env.local  # Optional: create a local copy
-# Edit .env with your specific settings
-```
-
-### 5. Run the application
+2. Run the app:
 
 ```bash
 python app.py
 ```
 
-The application will be available at `http://localhost:5000`
-
-## Project Structure
-
-MN-P2P-demo/
-├── app.py                 # Main application entry point
-├── paths.py              # Path configurations
-├── requirements.txt      # Python dependencies
-├── .env                 # Environment variables
-├── routes/              # Route blueprints
-│   ├── __init__.py
-│   ├── main.py         # Main routes
-│   └── api.py          # API routes
-├── templates/          # Jinja2 templates
-│   ├── base.html
-│   ├── dashboard.html
-│   └── error.html
-├── static/            # Static files
-│   ├── css/
-│   │   └── custom.css
-│   ├── js/
-│   │   └── app.js
-│   ├── uploads/       # File uploads
-│   └── images/        # Static images
-├── utils/             # Utility modules
-│   ├── __init__.py
-│   ├── database.py    # Database utilities
-│   ├── helpers.py     # Helper functions
-│   └── validators.py  # Input validators
-├── data/              # Data storage
-│   └── backups/       # Database backups
-├── config/            # Configuration files
-└── logs/              # Application logs
-```
-
-## Configuration
-
-The application uses environment variables for configuration. Key settings in `.env`:
-
-* `FLASK_APP`: Application entry point
-* `FLASK_ENV`: Environment (development/production)
-* `SECRET_KEY`: Secret key for sessions
-* `DATABASE_URL`: Database connection string
-
-## Development
-
-### Adding New Routes
-
-1. Create route functions in `routes/main.py` or `routes/api.py`
-2. Add corresponding templates in `templates/`
-3. Update navigation in the base template if needed
-
-### Database Operations
-
-Database utilities are available in `utils/database.py`:
-
-```python
-from utils.database import get_db_connection, execute_query
-```
-
-### Styling
-
-Custom styles go in `static/css/custom.css`. The application uses Bootstrap 5 for base styling.
-
-## Deployment
-
-### Using Gunicorn
-
-```bash
-gunicorn --bind 0.0.0.0:8000 app:app
-```
-
-### Environment Variables for Production
-
-Set these environment variables in production:
-
-```bash
-FLASK_ENV=production
-SECRET_KEY=your-secret-key-here
-DATABASE_URL=your-database-url-here
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-Created by SMILHS (2025)
+3. Open [http://localhost:5000](http://localhost:5000) in two different browsers or tabs to test P2P demo.
 
 ---
 
-*Generated with Flask App Generator Wizard*
+## 🛠️ Future Improvements
+
+- Integrate real ModularNucleoid Fortran WASM modules.
+- Expand P2P syncing logic and error handling.
+- Add user authentication and data encryption.
+- Enhance UI/UX for simulation parameter input and result visualization.
+
+---
+
+## 🤝 Contributing
+
+Contributions and feedback are welcome! Please open issues or pull requests on GitHub.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+**ModularNucleoid P2P Demo** — Decentralized science in your browser.

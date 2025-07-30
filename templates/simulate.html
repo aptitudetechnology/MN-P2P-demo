@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4"><i class="bi bi-cpu"></i> Simulation</h1>
+
+        <form id="simulation-form" class="mb-4">
+            <div class="mb-3">
+                <label for="input-data" class="form-label">Input Parameters</label>
+                <textarea class="form-control" id="input-data" rows="5" placeholder="Enter simulation input data..."></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="simulation-mode" class="form-label">Mode</label>
+                <select class="form-select" id="simulation-mode">
+                    <option value="default">Default</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="p2p">Peer-to-Peer</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-play-circle"></i> Run Simulation
+            </button>
+        </form>
+
+        <div id="simulation-result" class="alert alert-secondary d-none">
+            <strong>Output:</strong>
+            <pre id="output-area" class="mt-2 mb-0 text-monospace small"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('simulation-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const input = document.getElementById('input-data').value.trim();
+    const mode = document.getElementById('simulation-mode').value;
+    const outputArea = document.getElementById('output-area');
+    const resultContainer = document.getElementById('simulation-result');
+
+    if (!input) {
+        alert('Please enter input data.');
+        return;
+    }
+
+    // Simulated output (replace with real WASM computation or AJAX call)
+    const simulatedOutput = `Mode: ${mode}\nInput Length: ${input.length}\nSimulation complete.`;
+
+    outputArea.textContent = simulatedOutput;
+    resultContainer.classList.remove('d-none');
+});
+</script>
+{% endblock %}
