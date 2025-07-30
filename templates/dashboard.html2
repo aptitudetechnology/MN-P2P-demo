@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1>ModularNucleoid P2P Demo</h1>
+    <p class="lead">Fortran + WebAssembly + P2P = Decentralized Science Apps</p>
+    <p class="text-muted">Browser-based P2P networking with WebAssembly-compiled scientific computations</p>
+  </div>
+</div>
+
+<!-- P2P Connection Section -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0"><i class="bi bi-share"></i> P2P Connection</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">Your Peer ID:</label>
+          <div class="input-group">
+            <input type="text" id="my-peer-id" class="form-control" readonly placeholder="Generating...">
+            <button class="btn btn-outline-secondary" onclick="copyPeerId()" title="Copy to clipboard">
+              <i class="bi bi-clipboard"></i>
+            </button>
+          </div>
+          <div class="form-text">Share this ID with other peers to connect</div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="peer-id" class="form-label">Connect to Peer ID:</label>
+          <div class="input-group">
+            <input type="text" id="peer-id" class="form-control" placeholder="Enter peer ID to connect">
+            <button class="btn btn-primary" onclick="connect()">Connect</button>
+          </div>
+        </div>
+        
+        <div class="connection-status">
+          <span id="connection-status" class="badge bg-secondary">Not Connected</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0"><i class="bi bi-cpu"></i> System Status</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span>WebAssembly Support:</span>
+          <span id="wasm-status" class="badge bg-success">Supported</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span>P2P Network:</span>
+          <span id="p2p-status" class="badge bg-warning">Initializing</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span>Last Updated:</span>
+          <span class="text-muted">{{ format_datetime(datetime.now()) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DNA Sequence Processing Section -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0"><i class="bi bi-diagram-3"></i> DNA Sequence Processing</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="mb-3">
+              <label for="sequence" class="form-label">DNA Sequence:</label>
+              <textarea id="sequence" class="form-control" rows="4" 
+                        placeholder="Enter DNA sequence (e.g., AGCTCGATCGCG)"></textarea>
+              <div class="form-text">Enter nucleotide sequences using A, T, G, C characters</div>
+            </div>
+            <button class="btn btn-success" onclick="processSequence()">
+              <i class="bi bi-play-circle"></i> Process Locally
+            </button>
+            <button class="btn btn-info" onclick="sendToPeer()" id="send-to-peer-btn" disabled>
+              <i class="bi bi-arrow-right-circle"></i> Send to Peer
+            </button>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body">
+                <h6 class="card-title">Quick Test Sequences</h6>
+                <button class="btn btn-outline-secondary btn-sm mb-1" onclick="setSequence('AGCTCGATCGCG')">
+                  Sample 1
+                </button>
+                <button class="btn btn-outline-secondary btn-sm mb-1" onclick="setSequence('GGCCTTAATTGGCC')">
+                  High GC
+                </button>
+                <button class="btn btn-outline-secondary btn-sm mb-1" onclick="setSequence('AAAATTTTAAAATTTT')">
+                  Low GC
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Results Section -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0"><i class="bi bi-bar-chart"></i> Local Results</h5>
+      </div>
+      <div class="card-body">
+        <pre id="local-result" class="bg-light p-3 rounded">No results yet...</pre>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0"><i class="bi bi-arrow-down-circle"></i> Peer Results</h5>
+      </div>
+      <div class="card-body">
+        <pre id="peer-result" class="bg-light p-3 rounded">No peer results yet...</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions Section -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-lightning"></i> Quick Actions</h5>
+        <div class="btn-group" role="group">
+          <a href="{{ url_for('main.simulate') }}" class="btn btn-outline-primary">
+            <i class="bi bi-calculator"></i> Advanced Simulation
+          </a>
+          <a href="{{ url_for('main.p2p_demo') }}" class="btn btn-outline-info">
+            <i class="bi bi-diagram-2"></i> P2P Demo Page
+          </a>
+          <a href="{{ url_for('main.settings') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-gear"></i> Settings
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for P2P functionality -->
+<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+<script>
+let peer = new Peer(); // Generate random ID
+let conn = null;
+
+// Initialize peer connection
+peer.on('open', id => {
+  console.log("My peer ID is: " + id);
+  document.getElementById('my-peer-id').value = id;
+  document.getElementById('p2p-status').textContent = 'Ready';
+  document.getElementById('p2p-status').className = 'badge bg-success';
+});
+
+// Handle incoming connections
+peer.on('connection', c => {
+  conn = c;
+  updateConnectionStatus('Connected (Incoming)', 'success');
+  
+  conn.on('data', async data => {
+    console.log('Received data:', data);
+    const result = await runWasm(data);
+    conn.send(result);
+    document.getElementById('peer-result').textContent = `Processed for peer: ${result}`;
+  });
+  
+  conn.on('close', () => {
+    updateConnectionStatus('Disconnected', 'secondary');
+  });
+});
+
+// Connect to peer
+async function connect() {
+  const destId = document.getElementById("peer-id").value.trim();
+  if (!destId) {
+    alert('Please enter a peer ID to connect');
+    return;
+  }
+  
+  conn = peer.connect(destId);
+  
+  conn.on('open', () => {
+    updateConnectionStatus('Connected (Outgoing)', 'success');
+    document.getElementById('send-to-peer-btn').disabled = false;
+  });
+  
+  conn.on('data', data => {
+    console.log('Received result:', data);
+    document.getElementById("peer-result").textContent = "Peer result: " + data;
+  });
+  
+  conn.on('close', () => {
+    updateConnectionStatus('Disconnected', 'secondary');
+    document.getElementById('send-to-peer-btn').disabled = true;
+  });
+}
+
+// Send sequence to peer
+function sendToPeer() {
+  const sequence = document.getElementById("sequence").value.trim();
+  if (!sequence) {
+    alert('Please enter a DNA sequence first');
+    return;
+  }
+  
+  if (conn && conn.open) {
+    conn.send(sequence);
+    document.getElementById('peer-result').textContent = 'Sent to peer, waiting for result...';
+  } else {
+    alert('Not connected to any peer');
+  }
+}
+
+// Process sequence locally
+async function processSequence() {
+  const sequence = document.getElementById("sequence").value.trim();
+  if (!sequence) {
+    alert('Please enter a DNA sequence first');
+    return;
+  }
+  
+  try {
+    const result = await runWasm(sequence);
+    document.getElementById('local-result').textContent = result;
+  } catch (error) {
+    document.getElementById('local-result').textContent = `Error: ${error.message}`;
+  }
+}
+
+// Dummy WASM function (replace with real WASM module)
+async function runWasm(dnaSeq) {
+  // Simple GC content calculation as placeholder
+  const gcCount = (dnaSeq.match(/[GC]/g) || []).length;
+  const gcPercent = ((gcCount / dnaSeq.length) * 100).toFixed(2);
+  
+  // Simulate processing time
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  return `GC content: ${gcPercent}% (${gcCount}/${dnaSeq.length} nucleotides)`;
+}
+
+// Utility functions
+function updateConnectionStatus(status, type) {
+  const statusElement = document.getElementById('connection-status');
+  statusElement.textContent = status;
+  statusElement.className = `badge bg-${type}`;
+}
+
+function copyPeerId() {
+  const peerIdInput = document.getElementById('my-peer-id');
+  peerIdInput.select();
+  document.execCommand('copy');
+  
+  // Show temporary feedback
+  const button = event.target.closest('button');
+  const originalHTML = button.innerHTML;
+  button.innerHTML = '<i class="bi bi-check"></i>';
+  setTimeout(() => {
+    button.innerHTML = originalHTML;
+  }, 1000);
+}
+
+function setSequence(sequence) {
+  document.getElementById('sequence').value = sequence;
+}
+
+// Check WebAssembly support
+if (typeof WebAssembly !== 'object') {
+  document.getElementById('wasm-status').textContent = 'Not Supported';
+  document.getElementById('wasm-status').className = 'badge bg-danger';
+}
+</script>
+{% endblock %}

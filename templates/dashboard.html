@@ -1,292 +1,99 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="row">
-  <div class="col-12">
-    <h1>ModularNucleoid P2P Demo</h1>
-    <p class="lead">Fortran + WebAssembly + P2P = Decentralized Science Apps</p>
-    <p class="text-muted">Browser-based P2P networking with WebAssembly-compiled scientific computations</p>
-  </div>
-</div>
+from flask import Blueprint, render_template, current_app, request, jsonify
+from sqlalchemy import func
+from datetime import datetime, timedelta # Ensure datetime and timedelta are imported
 
-<!-- P2P Connection Section -->
-<div class="row mt-4">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0"><i class="bi bi-share"></i> P2P Connection</h5>
-      </div>
-      <div class="card-body">
-        <div class="mb-3">
-          <label class="form-label">Your Peer ID:</label>
-          <div class="input-group">
-            <input type="text" id="my-peer-id" class="form-control" readonly placeholder="Generating...">
-            <button class="btn btn-outline-secondary" onclick="copyPeerId()" title="Copy to clipboard">
-              <i class="bi bi-clipboard"></i>
-            </button>
-          </div>
-          <div class="form-text">Share this ID with other peers to connect</div>
-        </div>
+# Import models directly. They already get 'db' from 'app' via 'from app import db' in models.py
+from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+
+
+main_bp = Blueprint('main', __name__)
+
+@main_bp.route('/')
+def dashboard():
+    """
+    Renders the main dashboard page.
+    Fetches comprehensive data for display, including P2P/DNA context and stats.
+    """
+    # Access the db instance from the current application context
+    db = current_app.extensions['sqlalchemy']
+    try:
+        # Data for Quick Stats and Recent Compounds sections
+        total_compounds = db.session.query(Compound).count()
+        recent_compounds = db.session.query(Compound).order_by(Compound.created_at.desc()).limit(5).all()
+
+        # Pass datetime.utcnow() for server time display
+        server_datetime = datetime.utcnow()
+
+        return render_template('dashboard.html', title='Dashboard',
+                               total_compounds=total_compounds,
+                               recent_compounds=recent_compounds,
+                               datetime=server_datetime) # Pass datetime for server time display
+    except Exception as e:
+        current_app.logger.error(f"Error loading dashboard data: {e}")
+        # Render the dashboard even if data loading fails, showing an error message
+        return render_template('dashboard.html', title='Dashboard',
+                               error_message="Could not load dashboard data. Database might be empty or inaccessible.")
+
+@main_bp.route('/compounds')
+def compounds():
+    """
+    Renders the compounds listing page.
+    Fetches all compounds and relevant statistics to display.
+    """
+    # Access the db instance from the current application context
+    db = current_app.extensions['sqlalchemy']
+    try:
+        all_compounds = db.session.query(Compound).all()
         
-        <div class="mb-3">
-          <label for="peer-id" class="form-label">Connect to Peer ID:</label>
-          <div class="input-group">
-            <input type="text" id="peer-id" class="form-control" placeholder="Enter peer ID to connect">
-            <button class="btn btn-primary" onclick="connect()">Connect</button>
-          </div>
-        </div>
-        
-        <div class="connection-status">
-          <span id="connection-status" class="badge bg-secondary">Not Connected</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0"><i class="bi bi-cpu"></i> System Status</h5>
-      </div>
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span>WebAssembly Support:</span>
-          <span id="wasm-status" class="badge bg-success">Supported</span>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span>P2P Network:</span>
-          <span id="p2p-status" class="badge bg-warning">Initializing</span>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span>Last Updated:</span>
-          <span class="text-muted">{{ format_datetime(datetime.now()) }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        # Calculate statistics needed by the template
+        total_compounds = db.session.query(Compound).count()
+        biochemical_groups_count = db.session.query(BiochemicalGroup).count()
+        therapeutic_areas_count = db.session.query(TherapeuticArea).count()
 
-<!-- DNA Sequence Processing Section -->
-<div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0"><i class="bi bi-diagram-3"></i> DNA Sequence Processing</h5>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="mb-3">
-              <label for="sequence" class="form-label">DNA Sequence:</label>
-              <textarea id="sequence" class="form-control" rows="4" 
-                        placeholder="Enter DNA sequence (e.g., AGCTCGATCGCG)"></textarea>
-              <div class="form-text">Enter nucleotide sequences using A, T, G, C characters</div>
-            </div>
-            <button class="btn btn-success" onclick="processSequence()">
-              <i class="bi bi-play-circle"></i> Process Locally
-            </button>
-            <button class="btn btn-info" onclick="sendToPeer()" id="send-to-peer-btn" disabled>
-              <i class="bi bi-arrow-right-circle"></i> Send to Peer
-            </button>
-          </div>
-          <div class="col-md-4">
-            <div class="card bg-light">
-              <div class="card-body">
-                <h6 class="card-title">Quick Test Sequences</h6>
-                <button class="btn btn-outline-secondary btn-sm mb-1" onclick="setSequence('AGCTCGATCGCG')">
-                  Sample 1
-                </button>
-                <button class="btn btn-outline-secondary btn-sm mb-1" onclick="setSequence('GGCCTTAATTGGCC')">
-                  High GC
-                </button>
-                <button class="btn btn-outline-secondary btn-sm mb-1" onclick="setSequence('AAAATTTTAAAATTTT')">
-                  Low GC
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        # Calculate recent additions (e.g., compounds added in the last 30 days)
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        recent_additions_count = db.session.query(Compound).filter(Compound.created_at >= thirty_days_ago).count()
 
-<!-- Results Section -->
-<div class="row mt-4">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0"><i class="bi bi-bar-chart"></i> Local Results</h5>
-      </div>
-      <div class="card-body">
-        <pre id="local-result" class="bg-light p-3 rounded">No results yet...</pre>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0"><i class="bi bi-arrow-down-circle"></i> Peer Results</h5>
-      </div>
-      <div class="card-body">
-        <pre id="peer-result" class="bg-light p-3 rounded">No peer results yet...</pre>
-      </div>
-    </div>
-  </div>
-</div>
+        # Create a stats dictionary to pass to the template
+        stats = {
+            'total_compounds': total_compounds,
+            'biochemical_groups': biochemical_groups_count,
+            'therapeutic_areas': therapeutic_areas_count,
+            'recent_additions': recent_additions_count,
+        }
 
-<!-- Quick Actions Section -->
-<div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"><i class="bi bi-lightning"></i> Quick Actions</h5>
-        <div class="btn-group" role="group">
-          <a href="{{ url_for('main.simulate') }}" class="btn btn-outline-primary">
-            <i class="bi bi-calculator"></i> Advanced Simulation
-          </a>
-          <a href="{{ url_for('main.p2p_demo') }}" class="btn btn-outline-info">
-            <i class="bi bi-diagram-2"></i> P2P Demo Page
-          </a>
-          <a href="{{ url_for('main.settings') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-gear"></i> Settings
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        # Fetch data for filters and periodic table navigation (if needed on compounds page)
+        biochemical_groups_data = db.session.query(BiochemicalGroup).all()
+        diseases_data = db.session.query(Disease).all()
 
-<!-- JavaScript for P2P functionality -->
-<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
-<script>
-let peer = new Peer(); // Generate random ID
-let conn = null;
+        return render_template('compounds.html', title='Compounds',
+                               compounds=all_compounds,
+                               stats=stats, # Pass the 'stats' dictionary
+                               biochemical_groups=biochemical_groups_data, # Pass groups for filters
+                               diseases=diseases_data) # Pass diseases for filters
+    except Exception as e:
+        current_app.logger.error(f"Error loading compounds data: {e}")
+        return render_template('compounds.html', title='Compounds',
+                               error_message="Could not load compounds data. Database might be empty or inaccessible.")
 
-// Initialize peer connection
-peer.on('open', id => {
-  console.log("My peer ID is: " + id);
-  document.getElementById('my-peer-id').value = id;
-  document.getElementById('p2p-status').textContent = 'Ready';
-  document.getElementById('p2p-status').className = 'badge bg-success';
-});
+@main_bp.route('/p2p-demo')
+def p2p_demo():
+    """Renders the P2P demo page."""
+    return render_template('p2p_demo.html', title='P2P Demo')
 
-// Handle incoming connections
-peer.on('connection', c => {
-  conn = c;
-  updateConnectionStatus('Connected (Incoming)', 'success');
-  
-  conn.on('data', async data => {
-    console.log('Received data:', data);
-    const result = await runWasm(data);
-    conn.send(result);
-    document.getElementById('peer-result').textContent = `Processed for peer: ${result}`;
-  });
-  
-  conn.on('close', () => {
-    updateConnectionStatus('Disconnected', 'secondary');
-  });
-});
+@main_bp.route('/settings')
+def settings():
+    """Renders the settings page."""
+    return render_template('settings.html', title='Settings')
 
-// Connect to peer
-async function connect() {
-  const destId = document.getElementById("peer-id").value.trim();
-  if (!destId) {
-    alert('Please enter a peer ID to connect');
-    return;
-  }
-  
-  conn = peer.connect(destId);
-  
-  conn.on('open', () => {
-    updateConnectionStatus('Connected (Outgoing)', 'success');
-    document.getElementById('send-to-peer-btn').disabled = false;
-  });
-  
-  conn.on('data', data => {
-    console.log('Received result:', data);
-    document.getElementById("peer-result").textContent = "Peer result: " + data;
-  });
-  
-  conn.on('close', () => {
-    updateConnectionStatus('Disconnected', 'secondary');
-    document.getElementById('send-to-peer-btn').disabled = true;
-  });
-}
+@main_bp.route('/simulate')
+def simulate():
+    """Renders the simulation page."""
+    return render_template('simulate.html', title='Simulation')
 
-// Send sequence to peer
-function sendToPeer() {
-  const sequence = document.getElementById("sequence").value.trim();
-  if (!sequence) {
-    alert('Please enter a DNA sequence first');
-    return;
-  }
-  
-  if (conn && conn.open) {
-    conn.send(sequence);
-    document.getElementById('peer-result').textContent = 'Sent to peer, waiting for result...';
-  } else {
-    alert('Not connected to any peer');
-  }
-}
-
-// Process sequence locally
-async function processSequence() {
-  const sequence = document.getElementById("sequence").value.trim();
-  if (!sequence) {
-    alert('Please enter a DNA sequence first');
-    return;
-  }
-  
-  try {
-    const result = await runWasm(sequence);
-    document.getElementById('local-result').textContent = result;
-  } catch (error) {
-    document.getElementById('local-result').textContent = `Error: ${error.message}`;
-  }
-}
-
-// Dummy WASM function (replace with real WASM module)
-async function runWasm(dnaSeq) {
-  // Simple GC content calculation as placeholder
-  const gcCount = (dnaSeq.match(/[GC]/g) || []).length;
-  const gcPercent = ((gcCount / dnaSeq.length) * 100).toFixed(2);
-  
-  // Simulate processing time
-  await new Promise(resolve => setTimeout(resolve, 100));
-  
-  return `GC content: ${gcPercent}% (${gcCount}/${dnaSeq.length} nucleotides)`;
-}
-
-// Utility functions
-function updateConnectionStatus(status, type) {
-  const statusElement = document.getElementById('connection-status');
-  statusElement.textContent = status;
-  statusElement.className = `badge bg-${type}`;
-}
-
-function copyPeerId() {
-  const peerIdInput = document.getElementById('my-peer-id');
-  peerIdInput.select();
-  document.execCommand('copy');
-  
-  // Show temporary feedback
-  const button = event.target.closest('button');
-  const originalHTML = button.innerHTML;
-  button.innerHTML = '<i class="bi bi-check"></i>';
-  setTimeout(() => {
-    button.innerHTML = originalHTML;
-  }, 1000);
-}
-
-function setSequence(sequence) {
-  document.getElementById('sequence').value = sequence;
-}
-
-// Check WebAssembly support
-if (typeof WebAssembly !== 'object') {
-  document.getElementById('wasm-status').textContent = 'Not Supported';
-  document.getElementById('wasm-status').className = 'badge bg-danger';
-}
-</script>
-{% endblock %}
+# You can add more routes here for specific compound details, etc.
+# @main_bp.route('/compound/<int:compound_id>')
+# def compound_detail(compound_id):
+#     db = current_app.extensions['sqlalchemy']
+#     compound = db.session.query(Compound).get_or_404(compound_id)
+#     return render_template('compound_detail.html', title=compound.name, compound=compound)
