@@ -52,7 +52,9 @@ def create_app():
 
     # IMPORTANT: Import db from models *inside* create_app, after the app instance is created.
     # This breaks the circular import dependency.
-    from models import db 
+    #from models import db
+    from extensions import db
+ 
     
     # Initialize extensions with the app instance
     db.init_app(app) # Initialize db with the Flask app instance
