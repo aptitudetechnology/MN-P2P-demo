@@ -55,7 +55,7 @@ limiter = Limiter(
 )
 
 # Import models after db initialization
-from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+#from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
 
 # Import blueprints from the routes package
 from routes import register_blueprints
