@@ -22,8 +22,10 @@ flask-socketio==5.3.0 # Compatible with Flask 2.3.3
 eventlet==0.33.3
 
 # Optional: Fortran-compatible scientific computing in Python
-numpy==1.26.4
-scipy==1.11.4
+numpy==1.26.4 # Latest version compatible with Python 3.8 to 3.12 (as of early 2024, check pypi for latest)
+scipy==1.11.4 # Latest version compatible with Python 3.8 to 3.12 (as of early 2024, check pypi for latest)
 
-# Optional: If automating Fortran→WASM builds via subprocess
-subprocess-runner==0.0.8 # Or use subprocess from Python stdlib
+# Removed subprocess-runner as it's not found and subprocess from stdlib is an alternative.
+# If automating Fortran→WASM builds via subprocess, use Python's built-in 'subprocess' module.
+# import subprocess
+# result = subprocess.run(['your_command'], capture_output=True, text=True)
