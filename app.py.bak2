@@ -19,6 +19,12 @@ from flask_caching import Cache
 from datetime import datetime
 import json
 
+# Import models
+from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+
+
+
+
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
 
@@ -36,8 +42,7 @@ app.config['CACHE_TYPE'] = 'simple'
 (BASE_DIR / 'data').mkdir(parents=True, exist_ok=True)
 
 # Initialize extensions
-# db is initialized here with the app instance
-db = SQLAlchemy(app) # <--- THIS LINE IS NOW UNCOMMENTED AND CORRECT
+db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 CORS(app)
 cache = Cache(app)
@@ -49,9 +54,8 @@ limiter = Limiter(
     default_limits=["200 per day", "50 per hour"]
 )
 
-# Import models *after* db and other extensions are initialized with the app
-# This prevents circular import issues where models try to use 'db' before it's fully set up
-from models.models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
+# Import models after db initialization
+#from models import Compound, BiochemicalGroup, TherapeuticArea, Disease, Study
 
 # Import blueprints from the routes package
 from routes import register_blueprints
@@ -75,9 +79,6 @@ logger = logging.getLogger(__name__)
 def init_db():
     """Initialize the database."""
     click.echo('Initializing database...')
-    # Use db.create_all() for initial table creation if not using migrations
-    # However, with Flask-Migrate, 'flask db upgrade' is preferred.
-    # This command might be redundant if you're using Flask-Migrate fully.
     db.create_all()
     click.echo('Database initialized!')
 
