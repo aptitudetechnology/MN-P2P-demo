@@ -1,13 +1,10 @@
 # models.py
-from flask_sqlalchemy import SQLAlchemy
+
 from sqlalchemy import func
 from datetime import datetime
 import hashlib
 import json
-
-# Initialize SQLAlchemy here, but don't attach to app yet.
-# This allows it to be imported by other modules without circular dependencies.
-db = SQLAlchemy()
+from extensions import db
 
 # Association table for Compound and TherapeuticArea (Many-to-Many)
 compound_therapeutic_area = db.Table(
