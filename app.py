@@ -96,6 +96,11 @@ def create_app():
                 "icon": "flask"
             },
             {
+                "name": "Fortran WASM",
+                "route": "/fortran",
+                "icon": "code-slash"
+            },
+            {
                 "name": "P2P Demo",
                 "route": "/p2p-demo",
                 "icon": "diagram-2"
