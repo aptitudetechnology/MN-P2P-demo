@@ -109,6 +109,76 @@ def simulate():
 def workers():
     return render_template('workers.html', title='Workers')
 
+@main_bp.route('/workers') # <-- Using main_bp.route here
+def workers():
+    """Renders the workers page with the list of workers and the add form."""
+    return render_template('workers.html', workers=workers_data)
+
+@main_bp.route('/add_worker', methods=['POST']) # <-- Using main_bp.route here
+def add_worker():
+    """Handles the form submission for adding a new worker."""
+    global next_worker_id # To modify the global ID counter
+
+    if request.method == 'POST':
+        worker_name = request.form.get('worker_name')
+        ip_address = request.form.get('ip_address')
+        ssh_username = request.form.get('ssh_username')
+        ssh_private_key_path = request.form.get('ssh_private_key_path')
+        ssh_passphrase = request.form.get('ssh_passphrase')
+
+        if not all([worker_name, ip_address, ssh_username, ssh_private_key_path]):
+            flash('All required fields must be filled out!', 'danger')
+            # Redirect using the blueprint name: 'blueprint_name.route_function_name'
+            return redirect(url_for('main.workers'))
+
+        # In a real application, you would:
+        # 1. Validate inputs more thoroughly (e.g., IP address format, path existence).
+        # 2. Store this data in a database.
+        # 3. Potentially initiate a background task to check SSH connection/provision.
+
+        new_worker = {
+            'id': next_worker_id,
+            'name': worker_name,
+            'ip_address': ip_address,
+            'ssh_username': ssh_username,
+            'ssh_private_key_path': ssh_private_key_path,
+            'ssh_passphrase': ssh_passphrase if ssh_passphrase else 'N/A', # Store securely in real app
+            'status': 'provisioning', # Initial status
+            'last_check': 'N/A'
+        }
+        workers_data.append(new_worker)
+        next_worker_id += 1
+
+        flash(f'Worker "{worker_name}" added successfully!', 'success')
+        return redirect(url_for('main.workers'))
+
+    # If somehow a GET request hits this route, redirect or error
+    return redirect(url_for('main.workers'))
+
+
+@main_bp.route('/manage_worker/<int:worker_id>') # <-- Using main_bp.route here
+def manage_worker(worker_id):
+    # Logic to fetch and display details for a specific worker
+    worker = next((w for w in workers_data if w['id'] == worker_id), None)
+    if worker:
+        return f"Managing worker: {worker['name']} ({worker['id']})" # Placeholder
+    flash('Worker not found.', 'danger')
+    return redirect(url_for('main.workers'))
+
+
+@main_bp.route('/remove_worker/<int:worker_id>', methods=['POST']) # <-- Using main_bp.route here
+def remove_worker(worker_id):
+    global workers_data
+    # In a real app, you'd remove from DB
+    original_len = len(workers_data)
+    workers_data = [w for w in workers_data if w['id'] != worker_id]
+    if len(workers_data) < original_len:
+        flash(f'Worker removed successfully.', 'success')
+    else:
+        flash(f'Worker not found.', 'danger')
+    return redirect(url_for('main.workers'))
+
+
 
 # You can add more routes here for specific compound details, etc.
 # @main_bp.route('/compound/<int:compound_id>')
