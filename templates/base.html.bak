@@ -23,8 +23,8 @@
                 <ul class="navbar-nav me-auto">
                     {% for item in nav_items %}
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.path == item.route else '' }}"
-                           href="{{ item.route }}">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'main.' + item.name.lower().replace(' ', '_') else '' }}"
+                           href="{{ url_for('main.' + item.name.lower().replace(' ', '_')) }}">
                             <i class="bi bi-{{ item.icon }}"></i> {{ item.name }}
                         </a>
                     </li>

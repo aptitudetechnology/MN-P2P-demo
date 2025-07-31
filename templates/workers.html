@@ -1,0 +1,100 @@
+{# workers.html #}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="mb-4">Workers <i class="bi bi-server"></i></h1>
+
+    {# Form for adding a new worker #}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Add New Worker</h5>
+        </div>
+        <div class="card-body">
+            {# The action attribute will point to your Flask route that handles adding a worker #}
+            <form action="{{ url_for('main.add_worker') }}" method="POST">
+                {# CSRF Token for security if you're using Flask-WTF or similar #}
+                {# {{ form.csrf_token }} #}
+
+                <div class="mb-3">
+                    <label for="worker_name" class="form-label">Worker Name</label>
+                    <input type="text" class="form-control" id="worker_name" name="worker_name" placeholder="e.g., Compute Node Alpha" required>
+                    <div class="form-text">A memorable name for your worker.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ip_address" class="form-label">IP Address or Hostname</label>
+                    <input type="text" class="form-control" id="ip_address" name="ip_address" placeholder="e.g., 192.168.1.100 or myworker.example.com" required>
+                    <div class="form-text">The network address of the worker server.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ssh_username" class="form-label">SSH Username</label>
+                    <input type="text" class="form-control" id="ssh_username" name="ssh_username" value="root" required>
+                    <div class="form-text">The username for SSH connection (e.g., 'root' or a sudo user).</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ssh_private_key_path" class="form-label">SSH Private Key Path on Manager</label>
+                    <input type="text" class="form-control" id="ssh_private_key_path" name="ssh_private_key_path" placeholder="e.g., ~/.ssh/mn_p2p_manager_id_rsa" required>
+                    <div class="form-text">Absolute or relative path to the private key file on the Flask server.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ssh_passphrase" class="form-label">SSH Passphrase (if applicable)</label>
+                    <input type="password" class="form-control" id="ssh_passphrase" name="ssh_passphrase">
+                    <div class="form-text">Leave blank if your private key has no passphrase.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i> Add Worker
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {# List of existing workers #}
+    <h2 class="mb-3">Existing Workers</h2>
+    {% if workers %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"> {# Responsive grid layout #}
+            {% for worker in workers %}
+            <div class="col">
+                <div class="card h-100"> {# h-100 for equal height cards #}
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">{{ worker.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ worker.ip_address }}</h6>
+                        <p class="card-text mb-2">
+                            Status: 
+                            {% if worker.status == 'online' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Online</span>
+                            {% elif worker.status == 'offline' %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Offline</span>
+                            {% elif worker.status == 'provisioning' %}
+                                <span class="badge bg-info text-dark"><i class="bi bi-hourglass-split me-1"></i> Provisioning...</span>
+                            {% else %}
+                                <span class="badge bg-secondary"><i class="bi bi-question-circle me-1"></i> Unknown</span>
+                            {% endif %}
+                        </p>
+                        <p class="card-text"><small class="text-muted">Last check: {{ worker.last_check if worker.last_check else 'N/A' }}</small></p>
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ url_for('main.manage_worker', worker_id=worker.id) }}" class="btn btn-sm btn-info me-2">
+                                <i class="bi bi-gear me-1"></i> Manage
+                            </a>
+                            <form action="{{ url_for('main.remove_worker', worker_id=worker.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove {{ worker.name }}?');">
+                                {# CSRF Token here too #}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash me-1"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            No workers added yet. Use the form above to add your first worker!
+        </div>
+    {% endif %}
+{% endblock %}

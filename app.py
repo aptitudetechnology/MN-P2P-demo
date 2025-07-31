@@ -106,6 +106,11 @@ def create_app():
                 "icon": "diagram-2"
             },
             {
+                "name": "Workers",
+                "route": "/workers",
+                "icon": "people"
+            },
+            {
                 "name": "Settings",
                 "route": "/settings",
                 "icon": "gear"
