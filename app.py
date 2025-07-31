@@ -41,6 +41,8 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
+    csrf = CSRFProtect(app)
+    # Enable CORS for all route
     # Configuration
     app.config['APPLICATION_NAME'] = 'ModularNucleoid P2P Demo'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{BASE_DIR / "data" / "compounds.db"}'
