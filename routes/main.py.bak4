@@ -76,20 +76,6 @@ def compounds():
         return render_template('compounds.html', title='Compounds',
                                error_message="Could not load compounds data. Database might be empty or inaccessible.")
 
-@main_bp.route('/fortran')
-def fortran():
-    """
-    Renders the Fortran WebAssembly pipeline testing page.
-    Provides interface for compiling Fortran code to WASM and testing execution.
-    """
-    try:
-        # Future: Add statistics about compiled WASM modules, performance benchmarks, etc.
-        return render_template('fortran.html', title='Fortran WASM Pipeline')
-    except Exception as e:
-        current_app.logger.error(f"Error loading Fortran WASM page: {e}")
-        return render_template('fortran.html', title='Fortran WASM Pipeline',
-                               error_message="Could not load Fortran WASM interface.")
-
 @main_bp.route('/p2p-demo')
 def p2p_demo():
     """Renders the P2P demo page."""
