@@ -109,10 +109,12 @@ def simulate():
 #def workers():
 #    return render_template('workers.html', title='Workers')
 
-@main_bp.route('/workers') # <-- Using main_bp.route here
+@main_bp.route('/workers')
 def workers():
     """Renders the workers page with the list of workers and the add form."""
-    return render_template('workers.html', workers=workers_data)
+    # Temporarily remove 'workers=workers_data' to isolate the problem
+    print("Attempting to render workers.html without 'workers_data'") # Debug print
+    return render_template('workers.html')
 
 @main_bp.route('/add_worker', methods=['POST']) # <-- Using main_bp.route here
 def add_worker():
