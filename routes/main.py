@@ -105,9 +105,9 @@ def simulate():
     """Renders the simulation page."""
     return render_template('simulate.html', title='Simulation')
 
-@main_bp.route('/workers')
-def workers():
-    return render_template('workers.html', title='Workers')
+#@main_bp.route('/workers')
+#def workers():
+#    return render_template('workers.html', title='Workers')
 
 @main_bp.route('/workers') # <-- Using main_bp.route here
 def workers():
