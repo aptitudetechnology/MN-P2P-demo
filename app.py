@@ -21,6 +21,8 @@ import json
 # Path configuration
 from paths import BASE_DIR, LOGS_DIR
 
+from flask_wtf.csrf import CSRFProtect
+
 # Logging setup - moved outside create_app for global access
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
