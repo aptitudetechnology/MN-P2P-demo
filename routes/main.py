@@ -105,6 +105,11 @@ def simulate():
     """Renders the simulation page."""
     return render_template('simulate.html', title='Simulation')
 
+@main_bp.route('/workers')
+def workers():
+    return render_template('workers.html', title='Workers')
+
+
 # You can add more routes here for specific compound details, etc.
 # @main_bp.route('/compound/<int:compound_id>')
 # def compound_detail(compound_id):
