@@ -3,6 +3,7 @@
 🌐 **Fortran + WebAssembly + P2P = Decentralized Science Apps**
 
 builds on : https://github.com/ccsb-scripps/ModularNucleoid
+using : https://gws.phd/posts/fortran_wasm/
 ---
 
 ## What is ModularNucleoid?
