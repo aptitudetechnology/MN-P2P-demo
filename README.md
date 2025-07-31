@@ -138,3 +138,6 @@ This project is licensed under the MIT License.
 ---
 
 **ModularNucleoid P2P Demo** — Decentralized science in your browser.
+
+Screenshot: <img width="1409" height="879" alt="image" src="https://github.com/user-attachments/assets/5027c5b9-4ce1-41cd-9848-0a3c5ea2e7fe" />
+
